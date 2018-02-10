@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>项目管理</title>
+    <link href="../plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link href="../plugins/bootstrap/bootstrap-table/css/bootstrap-table.min.css" rel="stylesheet">
+    <!-- HTML5 Shiv 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+    <!-- 注意： 如果通过 file://  引入 Respond.js 文件，则该文件无法起效果 -->
+    <!--[if lt IE 9]>
+    <script src="../js/html5shiv.js"></script>
+    <script src="../js/respond.min.js"></script>
+    <![endif]-->
+    <link href="../css/content.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid">
+    <!-- 查询区 -->
+    <div class="row">
+        <div class="col-md-12">
+            <div  class="pull-left btn-group" role="group" aria-label="...">
+                <button id="add-btn" type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;增加</button>
+            </div>
+            <div class="pull-right form-inline">
+                <div class="form-group">
+                    <label for="name">名称</label>
+                    <input type="text" onchange="javascript:$('#search-btn').click();" class="form-control" id="name" placeholder="请输入名称">
+                    <button id="search-btn" type="button" class="btn btn-primary"><i class="fa fa-search"></i>&nbsp;查询</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="tableId"></table>
+        </div>
+    </div>
+</div>
+<div id="projectDialog" class="layer-dialog">
+	<div class="box-dialog box-dialog-step">
+		<input type="hidden" name="id" value=""/>
+		<ul class="box-step">
+	    	<li class="active">项目信息</li>
+	        <li>配额信息</li>
+	    </ul>
+        <div class="content-body">
+			<div class="row dialog-tab">
+				<div class="col-md-12">
+					<div class="form-group">  
+						<label for="name">名称</label>
+						<input type="text" required validType="length(0,20);exists(../rest/identity/project/exists,name)" class="form-control" name="name" placeholder="请输入项目名称"/>
+					</div>
+				</div>				
+				<div class="col-md-12">
+					<div class="form-group">  
+						<label for="description">描述</label>
+						<textarea type="text" class="form-control" name="description" placeholder="描述"></textarea>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="form-inline">  
+						<div class="form-group">  
+							<label for="enabled">激活</label>
+							<input type="checkbox" class="form-control" name="enabled">
+						</div>
+					</div>
+				</div>			
+			</div>
+            <div class="row dialog-tab">
+            	<div class="col-md-6">
+            		<div class="form-group">
+            			<label for="metadataItems">元数据条目</label>
+            			<input type="number" required name="metadataItems" class="form-control"/>
+            		</div>
+            	</div>            	
+				<div class="col-md-6">
+					<div class="form-group">  
+						<label for="cores">VCPU数量</label>
+						<input type="number" required name="cores" class="form-control"/>
+					</div>
+				</div>	        	
+				<div class="col-md-6">
+					<div class="form-group">  
+						<label for="instances">实例</label>
+						<input type="number" required name="instances" class="form-control"/>
+					</div>
+				</div>	
+				<div class="col-md-6">
+            		<div class="form-group">
+            			<label for="injectedFiles">注入的文件</label>
+            			<input type="number" required name="injectedFiles" class="form-control"/>
+            		</div>
+            	</div>            	
+				<div class="col-md-6">
+					<div class="form-group">  
+						<label for="injectedFileContentBytes">已注入文件内容(Bytes)</label>
+						<input type="number" required name="injectedFileContentBytes" class="form-control"/>
+					</div>
+				</div>	        	
+				<div class="col-md-6">
+					<div class="form-group">  
+						<label for="keyPairs">密钥对 </label>
+						<input type="number" required name="keyPairs" class="form-control"/>
+					</div>
+				</div>		
+				<div class="col-md-6">
+            		<div class="form-group">
+            			<label for="injectedFilePathBytes">注入文件路径的长度 </label>
+            			<input type="number" required name="injectedFilePathBytes" class="form-control"/>
+            		</div>
+            	</div>            	
+				<div class="col-md-6">
+					<div class="form-group">  
+						<label for="ram">内存 (MB)</label>
+						<input type="number" required name="ram" class="form-control"/>
+					</div>
+				</div>	        	
+				<div class="col-md-6">
+            		<div class="form-group">
+            			<label for="volumes">卷 </label>
+            			<input type="number" required name="volumes" class="form-control"/>
+            		</div>
+            	</div>            	
+				<div class="col-md-6">
+					<div class="form-group">  
+						<label for="snapshots">卷快照 </label>
+						<input type="number" required name="snapshots" class="form-control"/>
+					</div>
+				</div>	        	
+				<div class="col-md-6">
+					<div class="form-group">  
+						<label for="gigabytes">卷及快照总大小 (GiB)</label>
+						<input type="number" required name="gigabytes" class="form-control"/>
+					</div>
+				</div>		
+				<div class="col-md-6">
+            		<div class="form-group">
+            			<label for="securityGroup">安全组</label>
+            			<input type="number" required name="securityGroup" class="form-control"/>
+            		</div>
+            	</div>            	
+				<div class="col-md-6">
+					<div class="form-group">  
+						<label for="securityGroupRule">安全组规则 </label>
+						<input type="number" required name="securityGroupRule" class="form-control"/>
+					</div>
+				</div>	        	
+				<div class="col-md-6">
+					<div class="form-group">  
+						<label for="floatingIP">浮动IP</label>
+						<input type="number" required name="floatingIP" class="form-control"/>
+					</div>
+				</div>		
+				<div class="col-md-6">
+            		<div class="form-group">
+            			<label for="network">网络</label>
+            			<input type="number" required name="network" class="form-control"/>
+            		</div>
+            	</div>            	
+				<div class="col-md-6">
+					<div class="form-group">  
+						<label for="port">端口</label>
+						<input type="number" required name="port" class="form-control"/>
+					</div>
+				</div>	        	
+				<div class="col-md-6">
+					<div class="form-group">  
+						<label for="router">路由</label>
+						<input type="number" required name="router" class="form-control"/>
+					</div>
+				</div>			
+            	<div class="col-md-6">
+            		<div class="form-group">
+            			<label for="subnet">子网</label>
+            			<input type="number" required name="subnet" class="form-control"/>
+            		</div>
+            	</div>            	
+            </div>
+		</div>
+	</div>
+</div>
+</body>
+<script src="../plugins/jquery/jquery.min.js"></script>
+<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="../plugins/bootstrap/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../js/json2.js"></script>
+<script src="../js/util.js"></script>
+<script src="../js/lch.validate.js"></script>
+<script src="../js/table.js"></script>
+<script src="../js/dialog.js?v=1"></script>
+<script src="../js/identity/project-list.js?v=2"></script>
+</html>
