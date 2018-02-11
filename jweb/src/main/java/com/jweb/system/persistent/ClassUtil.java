@@ -8,9 +8,7 @@ import java.net.URL;
 import java.net.URLDecoder;  
 import java.util.ArrayList;  
 import java.util.Enumeration;  
-import java.util.LinkedHashSet;  
 import java.util.List;  
-import java.util.Set;  
 import java.util.jar.JarEntry;  
 import java.util.jar.JarFile;  
 /** 
@@ -23,15 +21,15 @@ public class ClassUtil {
       
     public static void main(String[] args) throws Exception{  
         List<Class<?>> classes = ClassUtil.getClasses("com.jweb"); 
-        for (Class clas :classes) {  
+        for (Class<?> clas :classes) {  
             System.out.println(clas.getName());  
         }  
     }  
     /** 
      * 取得某个接口下所有实现这个接口的类 
      * */  
-    public static List<Class> getAllClassByInterface(Class c) {  
-            List<Class>  returnClassList = null;  
+    public static List<Class<?>> getAllClassByInterface(Class<?> c) {  
+            List<Class<?>>  returnClassList = null;  
               
             if(c.isInterface()) {  
                 // 获取当前的包名  
@@ -39,8 +37,8 @@ public class ClassUtil {
                 // 获取当前包下以及子包下所以的类  
                 List<Class<?>> allClass = getClasses(packageName);  
                 if(allClass != null) {  
-                    returnClassList = new ArrayList<Class>();  
-                    for(Class classes : allClass) {  
+                    returnClassList = new ArrayList<Class<?>>();  
+                    for(Class<?> classes : allClass) {  
                         // 判断是否是同一个接口  
                         if(c.isAssignableFrom(classes)) {  
                             // 本身不加入进去  

@@ -24,7 +24,7 @@ public class MysqlDialect extends AbstractLchDialect {
 			return "\t" + StringUtil.toSlide(column.getColumnName()) + " " + column.getDbType();
 		}
 		String dbType = "";
-		Class type = column.getJavaType();
+		Class<?> type = column.getJavaType();
 		if (type.equals(Integer.TYPE)||type.equals(Integer.class)) {
 			dbType = " INTEGER DEFAULT 0";
 

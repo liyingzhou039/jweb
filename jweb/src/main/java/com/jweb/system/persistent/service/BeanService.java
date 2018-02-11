@@ -189,7 +189,7 @@ public class BeanService {
 		}
 	}
 	public <T> Pager<T> getPager(Class<T> beanClass,int offset,int limit,String whereBy,String orderBy) throws BusiException{
-		Pager pager=new Pager();
+		Pager<T> pager=new Pager<T>();
 		String sql=d.listBeans(beanClass, offset, limit, whereBy, orderBy);
 		String cSql=d.toCountSql(beanClass, whereBy, orderBy);
 		Connection conn = null;
@@ -252,7 +252,7 @@ public class BeanService {
 		return o;
 	}
 	public <T> List<T> list(Class<T> beanClass,String whereBy,String orderBy) throws BusiException{
-		List<T> ls = new ArrayList();
+		List<T> ls = new ArrayList<>();
 		String sql=d.listBeans(beanClass,whereBy, orderBy);
 		Connection conn = null;
 		Statement st = null;  

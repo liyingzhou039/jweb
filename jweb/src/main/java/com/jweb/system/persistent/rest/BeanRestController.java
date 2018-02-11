@@ -86,7 +86,7 @@ public class BeanRestController {
 	@RequestMapping(value = "/create{beanName}",method = RequestMethod.POST)
     @ResponseBody
     public Object create(@PathVariable String beanName,@RequestParam(defaultValue = "{}") String beanJson) throws BusiException {
-		Result<?> r=new Result();
+		Result<?> r=new Result<>();
 		try {
 			Class<?> beanClass = BeanPool.getBeanClassBySimpleName(beanName);
 			Object bean = JsonUtil.jsonToBean(beanJson, beanClass);
@@ -107,9 +107,11 @@ public class BeanRestController {
     public <T> Result<T> createBatch(@PathVariable String beanName,@RequestParam(defaultValue = "[]") String beansJson) throws BusiException {
 		Result<T> r=new Result<T>();
 		try {
+			@SuppressWarnings("unchecked")
 			Class<T> beanClass =(Class<T>) BeanPool.getBeanClassBySimpleName(beanName);
 			List<T> beans = new ArrayList<T>();
 			
+			@SuppressWarnings("unchecked")
 			List<Object> objects = (List<Object>) JsonUtil.jsonToBean(beansJson,new ArrayList<Object>().getClass());
 			for(Object object:objects) {
 				beans.add((T)JsonUtil.jsonToBean(JsonUtil.beanToJson(object), beanClass));
@@ -130,7 +132,7 @@ public class BeanRestController {
 	@RequestMapping(value = "/update{beanName}",method = RequestMethod.PUT)
     @ResponseBody
     public Object update(@PathVariable String beanName,@RequestParam(defaultValue = "{}") String beanJson) throws BusiException {
-		Result<?> r=new Result();
+		Result<?> r=new Result<>();
 		try {
 			Class<?> beanClass = BeanPool.getBeanClassBySimpleName(beanName);
 			Object bean = JsonUtil.jsonToBean(beanJson, beanClass);
@@ -148,7 +150,7 @@ public class BeanRestController {
     @ResponseBody
     public Object remove(@PathVariable String beanName,@PathVariable String id) throws BusiException {
     	Class<?> beanClass = BeanPool.getBeanClassBySimpleName(beanName);
-		Result<?> r=new Result();
+		Result<?> r=new Result<>();
 		try {
 			beanService.removeBean(beanClass,id);
 			r.setOk(true);
@@ -162,7 +164,7 @@ public class BeanRestController {
     @ResponseBody
     public Object removeBatch(@PathVariable String beanName,@PathVariable String ids) throws BusiException {
     	Class<?> beanClass = BeanPool.getBeanClassBySimpleName(beanName);
-		Result<?> r=new Result();
+		Result<?> r=new Result<>();
 		try { 
 			beanService.removeBeans(beanClass,ids.split(","));
 			r.setOk(true);

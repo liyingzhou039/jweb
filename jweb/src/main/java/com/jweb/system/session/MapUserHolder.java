@@ -2,8 +2,6 @@ package com.jweb.system.session;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
-
 import com.jweb.system.util.JsonUtil;
 /** 
  * @ClassName: MapUserHolder 

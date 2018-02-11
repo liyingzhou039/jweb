@@ -9,7 +9,7 @@ package com.jweb.system.persistent.model;
 public class Column {
 	private String columnName;
 	private String columnDesc;
-	private Class javaType;
+	private Class<?> javaType;
 	private String dbType;
 	private int size;
 	private int digits;
@@ -37,10 +37,10 @@ public class Column {
 	public void setColumnDesc(String columnDesc) {
 		this.columnDesc = columnDesc;
 	}
-	public Class getJavaType() {
+	public Class<?> getJavaType() {
 		return javaType;
 	}
-	public void setJavaType(Class javaType) {
+	public void setJavaType(Class<?> javaType) {
 		this.javaType = javaType;
 	}
 	public String getDbType() {
