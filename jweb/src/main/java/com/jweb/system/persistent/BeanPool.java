@@ -19,11 +19,11 @@ import com.jweb.system.util.StringUtil;
  * @date: 2018年1月31日 下午4:17:59  
  */
 public class BeanPool {
-	private static Map<Class<?>,Table> mappers = new HashMap<Class<?>,Table>();
-	private static Map<String,Class<?>> simpleMapper = new HashMap<String,Class<?>>();
+	private static Map<Class<?>,Table> classTableMappers = new HashMap<Class<?>,Table>();
+	private static Map<String,Class<?>> classNameClassMappers = new HashMap<String,Class<?>>();
 	
 	public static boolean contains(Class<?> bean) {
-		return mappers.containsKey(bean);
+		return classTableMappers.containsKey(bean);
 	}
 	/**
 	 * 获取指定包下的所有Bean
@@ -34,7 +34,7 @@ public class BeanPool {
 			Bean beanAnnotation=clazz.getAnnotation(Bean.class);
 			if(beanAnnotation!=null){
 				addBean(clazz);
-				simpleMapper.put(StringUtil.firstLowerCase(clazz.getSimpleName()), clazz);
+				classNameClassMappers.put(StringUtil.firstLowerCase(clazz.getSimpleName()), clazz);
 			}
 		}
 	}
@@ -65,26 +65,26 @@ public class BeanPool {
 					table.getColumns().add(col);
 				}
 			}
-			mappers.put(bean, table);
+			classTableMappers.put(bean, table);
 		}
 	}
 	public static Table getBeanTable(Class<?> bean){
-		return mappers.get(bean);
+		return classTableMappers.get(bean);
 	}
 	public static Class<?> getBeanClassBySimpleName(String simpleName){
-		return simpleMapper.get(StringUtil.firstLowerCase(simpleName));
+		return classNameClassMappers.get(StringUtil.firstLowerCase(simpleName));
 	}
 	public static List<Table> getBeanTables(){
 		List<Table> tables = new ArrayList<Table>();
-		for(Class<?> key:mappers.keySet()) {
-			tables.add(mappers.get(key));
+		for(Class<?> key:classTableMappers.keySet()) {
+			tables.add(classTableMappers.get(key));
 		}
 		return tables;
 	}
 	
 	public static List<Class<?>> getBeans(){
 		List<Class<?>> beans = new ArrayList<Class<?>>();
-		for(Class<?> key:mappers.keySet()) {
+		for(Class<?> key:classTableMappers.keySet()) {
 			beans.add(key);
 		}
 		return beans;
