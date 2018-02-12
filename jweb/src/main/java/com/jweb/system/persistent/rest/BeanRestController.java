@@ -74,7 +74,6 @@ public class BeanRestController {
 						new TypeReference<List<Condition>>() {})),
 				transOrder(order));
     }
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/list{beanName}",method = RequestMethod.GET)
     @ResponseBody
     public Object list(

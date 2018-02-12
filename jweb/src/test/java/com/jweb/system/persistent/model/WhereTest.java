@@ -1,7 +1,5 @@
 package com.jweb.system.persistent.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
 
