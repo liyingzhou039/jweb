@@ -63,13 +63,13 @@ public class Where {
 	}
 	@Override
 	public String toString() {
-		SqlAndParams sqlAndParams = toSqlAndParams(this,new SqlAndParams());
+		PrepareSql prepareSql = toSqlAndParams(this,new PrepareSql());
 		
-		return sqlAndParams.toString();
+		return prepareSql.toString();
 	}
-	public static SqlAndParams toSqlAndParams(Where where,SqlAndParams sqlAndParams) {
+	public static PrepareSql toSqlAndParams(Where where,PrepareSql prepareSql) {
 		if(where.name==null) {
-			return toSqlAndParams(where.next,sqlAndParams);
+			return toSqlAndParams(where.next,prepareSql);
 		}
 		String sql = where.ex.value();
 		sql = sql.replace("${name}", StringUtil.toSlide(where.name));
@@ -83,7 +83,7 @@ public class Where {
 				vs+="?";
 			}
 			sql = sql.replace("${value}", vs);
-			sqlAndParams.getParams().addAll(values);
+			prepareSql.getParams().addAll(values);
 		}else if(where.value.getClass().isArray()){
 			Object[] os = (Object[]) where.value;
 			String vs = "";
@@ -92,27 +92,27 @@ public class Where {
 					vs+=",";
 				}
 				vs+="?";
-				sqlAndParams.getParams().add(os[i]);
+				prepareSql.getParams().add(os[i]);
 			}
 			sql = sql.replace("${value}", vs);
 		}else {
 			sql = sql.replace("${value}", "?");
-			sqlAndParams.getParams().add(where.value);
+			prepareSql.getParams().add(where.value);
 		}
 		
 		
-		sqlAndParams.setSql(sqlAndParams.getSql()+sql);
+		prepareSql.setSql(prepareSql.getSql()+sql);
 		
 		if(null!=where.sub) {
-			sqlAndParams.setSql(sqlAndParams.getSql()+" "+where.sub.relation+" (");
-			toSqlAndParams(where.sub,sqlAndParams);
-			sqlAndParams.setSql(sqlAndParams.getSql()+" ) ");
+			prepareSql.setSql(prepareSql.getSql()+" "+where.sub.relation+" (");
+			toSqlAndParams(where.sub,prepareSql);
+			prepareSql.setSql(prepareSql.getSql()+" ) ");
 		}
 		
 		if(null!=where.next) {
-			sqlAndParams.setSql(sqlAndParams.getSql()+" "+where.relation+" ");
-			toSqlAndParams(where.next,sqlAndParams);
+			prepareSql.setSql(prepareSql.getSql()+" "+where.relation+" ");
+			toSqlAndParams(where.next,prepareSql);
 		}
-		return sqlAndParams;
+		return prepareSql;
 	}
 }

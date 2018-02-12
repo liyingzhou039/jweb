@@ -3,7 +3,7 @@ package com.jweb.system.persistent.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SqlAndParams {
+public class PrepareSql {
 	private String sql="";
 	List<Object> params = new ArrayList<>(1);
 	public String getSql() {
