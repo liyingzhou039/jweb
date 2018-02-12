@@ -156,7 +156,7 @@ var util={
 				url : '/rest/bean/list'+bean.beanName,
 				dataType : 'json',
 				data : {
-					condition:bean.condition,
+					conditions:JSON.stringify(bean.conditions),
 					order:bean.order
 				},
 				success : function(data) {

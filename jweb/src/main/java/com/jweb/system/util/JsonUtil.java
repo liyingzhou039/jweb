@@ -6,6 +6,7 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 
 public class JsonUtil {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -29,6 +30,14 @@ public class JsonUtil {
 		return writer.toString();
 	}
 	public static <T> T jsonToBean(String json, Class<T> clazz) {
+		try {
+			return objectMapper.readValue(json, clazz);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static <T> T jsonToBean(String json, TypeReference<T> clazz) {
 		try {
 			return objectMapper.readValue(json, clazz);
 		} catch (Exception e) {

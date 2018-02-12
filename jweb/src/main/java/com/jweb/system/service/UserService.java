@@ -17,6 +17,8 @@ import com.jweb.system.entity.RoleMenu;
 import com.jweb.system.entity.User;
 import com.jweb.system.entity.UserRole;
 import com.jweb.system.exception.BusiException;
+import com.jweb.system.persistent.model.Expression;
+import com.jweb.system.persistent.model.Where;
 import com.jweb.system.persistent.service.BeanService;
 import com.jweb.system.session.Session;
 import com.jweb.system.util.MD5Util;
@@ -29,7 +31,11 @@ public class UserService{
 	public String login(String username,String password) throws BusiException {
 		String token = null;
 		try {
-			List<User> users = beanService.list(User.class, "username='"+username+"' and password='"+MD5Util.encode(password)+"'", null);
+			List<User> users = beanService.list(User.class, 
+					Where.create()
+					.and("username", Expression.eq, username)
+					.and("password", Expression.eq, MD5Util.encode(password))
+					, null);
 			User user = null;
 			if(null!=users&&users.size()>0) {
 				user = users.get(0);
@@ -54,25 +60,25 @@ public class UserService{
 			
 			if(null!=user) {
 				
-				List<UserRole> userRoles = beanService.list(UserRole.class, "user_id='"+id+"'", null);
-				String roleIds = "''";
+				List<UserRole> userRoles = beanService.list(UserRole.class, Where.create().and("userId", Expression.eq, id), null);
+				List<String> roleIds = new ArrayList<>();
 				for(UserRole userRole:userRoles) {
-					roleIds+=",'"+userRole.getRoleId()+"'";
+					roleIds.add(userRole.getRoleId());
 				}
-				List<RoleMenu> roleMenus = beanService.list(RoleMenu.class, "role_id in("+roleIds+")", null);
-				List<RoleElement> roleElements = beanService.list(RoleElement.class, "role_id in("+roleIds+")", null);
+				List<RoleMenu> roleMenus = beanService.list(RoleMenu.class, Where.create().and("roleId", Expression.in, roleIds), null);
+				List<RoleElement> roleElements = beanService.list(RoleElement.class, Where.create().and("roleId", Expression.in, roleIds), null);
 				//查询出所有菜单
-				String menuIds ="''";
+				List<String> menuIds = new ArrayList<>();
 				for(RoleMenu roleMenu:roleMenus) {
-					menuIds+=",'"+roleMenu.getMenuId()+"'";
+					menuIds.add(roleMenu.getMenuId());
 				}
-				List<Menu> menus = beanService.list(Menu.class, "id in("+menuIds+")", null);
+				List<Menu> menus = beanService.list(Menu.class, Where.create().and("id", Expression.in, menuIds), null);
 				//查询出所有资源
-				String elementIds ="''";
+				List<String> elementIds =new ArrayList<>();
 				for(RoleElement roleElement:roleElements) {
-					elementIds+=",'"+roleElement.getElementId()+"'";
+					elementIds.add(roleElement.getElementId());
 				}
-				List<Element> elements = beanService.list(Element.class, "id in("+elementIds+")", null);
+				List<Element> elements = beanService.list(Element.class, Where.create().and("id",Expression.in, elementIds), null);
 					
 				power.setMenus(menus);
 				power.setElements(elements);

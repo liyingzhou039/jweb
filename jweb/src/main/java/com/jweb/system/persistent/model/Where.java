@@ -77,10 +77,7 @@ public class Where {
 			List<?> values = (List<?>) where.value;
 			String vs = "";
 			for(int i=0;i<values.size();i++) {
-				if(vs.length()>0) {
-					vs+=",";
-				}
-				vs+="?";
+				vs+=",?";
 			}
 			sql = sql.replace("${value}", vs);
 			prepareSql.getParams().addAll(values);
@@ -88,10 +85,7 @@ public class Where {
 			Object[] os = (Object[]) where.value;
 			String vs = "";
 			for(int i=0;i<os.length;i++) {
-				if(vs.length()>0) {
-					vs+=",";
-				}
-				vs+="?";
+				vs+=",?";
 				prepareSql.getParams().add(os[i]);
 			}
 			sql = sql.replace("${value}", vs);

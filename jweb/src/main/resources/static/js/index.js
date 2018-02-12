@@ -136,7 +136,14 @@ window.onload = function () {
 function refreshFavorites(){
 	//@todo
 	//收藏列表需要重新修改为-当前用户的收藏
-	util.list({beanName:'Favorite',condition:'username :eq :qt'+localStorage.getItem('username')+':qt'},function(data){
+	util.list({beanName:'Favorite',conditions:[
+		{
+		relation:"and",
+		expression:"eq",
+		name:"username",
+		value:localStorage.getItem('username')
+		}]
+	},function(data){
 		var h ='';
 		for(var i=0;i<data.length;i++){
 			var onclickHtml='onclick="sys.openWindow({id:\''+data[i].winId+'\',title:\''+data[i].name+'\',url:\''
@@ -200,7 +207,20 @@ var sys={
         	fa.winId=$(this).parent().attr("winid");
         	fa.name=$(this).parent().attr("wintitle");
         	fa.url=$(this).parent().attr("winurl");
-        	fa.condition='win_id :eq :qt'+fa.winId+':qt and username :eq:qt'+fa.username+':qt';
+        	fa.conditions=[
+        		{
+	        		relation:"and",
+	        		expression:"eq",
+	        		name:"winId",
+	        		value:fa.winId
+        		},{
+            		relation:"and",
+            		expression:"eq",
+            		name:"username",
+            		value:fa.username
+            	}
+        	];
+        	
         	util.list(fa,function(r){
         		if(r&&r.length){
         			$like.animate(end,1000,'swing',function(){

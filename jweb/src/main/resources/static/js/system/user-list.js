@@ -34,7 +34,13 @@ $(function(){
         ],
         params:function () {
             return {
-                condition: "username :li '%"+$("#name").val()+"%'"
+            	conditions:JSON.stringify([
+            		{
+            		relation:"and",
+            		expression:"like",
+            		name:"username",
+            		value:"%"+$("#name").val()+"%"
+            		}])
             };
         }
     });

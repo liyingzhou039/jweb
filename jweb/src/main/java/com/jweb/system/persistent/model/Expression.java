@@ -1,7 +1,7 @@
 package com.jweb.system.persistent.model;
 
 public enum Expression {
-		in("${name} in (${value})"),
+		in("${name} in (''${value})"),
         eq("${name} = ${value}"),
         neq("${name} != ${value}"),
         gt("${name} > ${value}"),
