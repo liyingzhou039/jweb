@@ -13,14 +13,14 @@ public class WhereTest {
 		sexs.add("女");
 		
 		Where w = 
-		Where.build()
+		Where.create()
 		.and("userName",Expression.eq,"userName")
 		.or("age", Expression.eq, "age")
 		.and("sex", Expression.in,sexs)
-		.orSub(Where.build().and("name",Expression.like,"%like%").or("name1", Expression.lt, "name1"))
+		.orSub(Where.create().and("name",Expression.like,"%like%").or("name1", Expression.lt, "name1"))
 		.or("age", Expression.eq, 30)
 		.and("sex", Expression.in,sexs)
-		.andSub(Where.build().and("name",Expression.like,"%like%").or("name2", Expression.lt, "name2").and("name3", Expression.lt, "name3"))
+		.andSub(Where.create().and("name",Expression.like,"%like%").or("name2", Expression.lt, "name2").and("name3", Expression.lt, "name3"))
 		.or("score", Expression.gt, "score");
 		System.out.println(w);
 	}

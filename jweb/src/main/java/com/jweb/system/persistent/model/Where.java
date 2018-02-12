@@ -19,7 +19,7 @@ public class Where {
 		this.ex=ex;
 		this.value=value;
 	}
-	public static Where build() {
+	public static Where create() {
 		return new Where();
 	}
 	
