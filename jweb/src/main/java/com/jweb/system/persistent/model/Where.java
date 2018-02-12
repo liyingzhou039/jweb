@@ -76,7 +76,7 @@ public class Where {
 		if(where.value instanceof List) {
 			List<?> values = (List<?>) where.value;
 			String vs = "";
-			for(Object o : values) {
+			for(int i=0;i<values.size();i++) {
 				if(vs.length()>0) {
 					vs+=",";
 				}
@@ -84,6 +84,17 @@ public class Where {
 			}
 			sql = sql.replace("${value}", vs);
 			sqlAndParams.getParams().addAll(values);
+		}else if(where.value.getClass().isArray()){
+			Object[] os = (Object[]) where.value;
+			String vs = "";
+			for(int i=0;i<os.length;i++) {
+				if(vs.length()>0) {
+					vs+=",";
+				}
+				vs+="?";
+				sqlAndParams.getParams().add(os[i]);
+			}
+			sql = sql.replace("${value}", vs);
 		}else {
 			sql = sql.replace("${value}", "?");
 			sqlAndParams.getParams().add(where.value);
