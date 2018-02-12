@@ -10,6 +10,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.sqlite.SQLiteDataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
@@ -17,7 +18,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 public class DataSourceConfig implements EnvironmentAware{
 	 
 	private RelaxedPropertyResolver propertyResolver;
-
+	private String type;
 	private String driveClassName;
 	private String url;
 	private String userName;
@@ -39,6 +40,7 @@ public class DataSourceConfig implements EnvironmentAware{
 	@Override
     public void setEnvironment(Environment environment) {
         this.propertyResolver = new RelaxedPropertyResolver(environment, null);
+        this.type = propertyResolver.getProperty("spring.datasource.type");
         this.url = propertyResolver.getProperty("spring.datasource.url");
         this.userName= propertyResolver.getProperty("spring.datasource.username");
         this.password = propertyResolver.getProperty("spring.datasource.password");
@@ -58,7 +60,12 @@ public class DataSourceConfig implements EnvironmentAware{
         this.maxOpenPreparedStatements = propertyResolver.getProperty("spring.datasource.maxOpenPreparedStatements");
     }
 	@Bean
-    public DataSource druidDataSource() {
+    public DataSource dataSource() {
+		if("org.sqlite.SQLiteDataSource".equals(this.type)) {
+			SQLiteDataSource sqliteDatasource = new SQLiteDataSource();
+			sqliteDatasource.setUrl(this.url);
+			return sqliteDatasource;
+		}
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setUrl(url);
         druidDataSource.setUsername(userName);

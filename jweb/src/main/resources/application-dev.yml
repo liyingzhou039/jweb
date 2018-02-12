@@ -1,0 +1,28 @@
+logging:
+    config: classpath:logback-${spring.profiles.active}.xml
+    level:
+        com.jweb: DEBUG
+    path: logs
+spring:
+    application:
+        name: jweb
+    thymeleaf:
+        mode: LEGACYHTML5
+        cache: false
+    jackson:
+        date-format: yyyy-MM-dd HH:mm:ss
+        time-zone: GMT+8
+        default-property-inclusion: NON_NULL
+    datasource:
+        name: test-db
+        url: jdbc:mysql://121.42.44.157:8080/jweb?useUnicode=true&characterEncoding=UTF8
+        username: jweb
+        password: jweb
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+
+server:
+  port: 8888
+  
+security:
+  ignoredURI: /toLogin,/login,/rest/system/login/in,/error,/api/.*

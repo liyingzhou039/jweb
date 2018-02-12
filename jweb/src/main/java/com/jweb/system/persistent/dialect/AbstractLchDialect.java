@@ -260,6 +260,6 @@ public abstract class  AbstractLchDialect {
 		return o;
 	}
 	public static AbstractLchDialect getDialect(){
-		return new MysqlDialect();
+		return new SqliteDialect();
 	}
 }
