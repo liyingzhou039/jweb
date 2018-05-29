@@ -12,7 +12,7 @@ import com.jweb.system.interceptor.TokenInterceptor;
 public class WebConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(getTokenInterceptor());
+		//registry.addInterceptor(getTokenInterceptor());
 		super.addInterceptors(registry);
 	}
 	@Override
