@@ -5,6 +5,8 @@ function portal_page_PageEditor(){
 	
 	this.render=function(page){
 		this.page = page;
+		this.page.portalsMap={};
+		
 		var h = '';
 		h+='<div class="row" style="min-height:100%;">';
 		h+='	<div class="services col-sm-2">services</div>';
@@ -13,5 +15,11 @@ function portal_page_PageEditor(){
 		
 		var $this = $("#"+this.id);
 		$this.empty().html(h);
+		
+		if(this.page.portals){
+			for(var i=0;i<this.page.portals.length;i++){
+				this._initPortal(this.page.portals[i],null);
+			}
+		}
 	};
 }
