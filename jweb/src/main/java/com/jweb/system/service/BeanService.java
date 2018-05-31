@@ -1,4 +1,4 @@
-package com.jweb.system.persistent.service;
+package com.jweb.system.service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

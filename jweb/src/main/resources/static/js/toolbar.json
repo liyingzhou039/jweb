@@ -1,0 +1,30 @@
+[
+	{
+		"id": "components",
+		"name":"组件",
+		"data": [
+			{
+				"id": "portal.nav.Sidebar",
+				"name": "侧边工具栏"
+			},
+			{
+				"id": "portal.layout.Container",
+				"name": "容器"
+			}
+		]
+	},
+	{
+		"id": "services",
+		"name":"服务",
+		"data": [
+			{
+				"id": "js/services.json",
+				"name": "服务列表"
+			},
+			{
+				"id": "js/portals.json",
+				"name": "组件列表"
+			}
+		]
+	}
+]

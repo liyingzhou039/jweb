@@ -1,4 +1,4 @@
-package com.jweb.system.persistent.rest;
+package com.jweb.system.rest;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ import com.jweb.system.persistent.model.Where;
 import com.jweb.system.util.Result;
 
 
-import com.jweb.system.persistent.service.BeanService;
-import com.jweb.system.persistent.service.ValidatorService;
+import com.jweb.system.service.BeanService;
+import com.jweb.system.service.ValidatorService;
 import com.jweb.system.util.JsonUtil;
  /** 
  * @ClassName: BeanRestController 

@@ -1,16 +1,27 @@
 package com.jweb.system.web;
 
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.jweb.system.dto.page.Page;
+import com.jweb.system.service.PageService;
 @Controller
-@RequestMapping("/page")
+@RequestMapping("")
 public class PageController{
-	@RequestMapping("view")
-    public String view() {
-    	return "page/view";
+	@Autowired
+	PageService pageService;
+	
+	@RequestMapping("page/**")
+    public String view(HttpServletRequest request) {
+		Page page = pageService.getByURI(request.getRequestURI());
+	    request.setAttribute("page",page);
+    	return "system/page";
     }
-	@RequestMapping("edit")
-    public String edit() {
-    	return "page/edit";
+	@RequestMapping("page-edit/**")
+    public String edit(HttpServletRequest request) {
+		Page page = pageService.getByURI(request.getRequestURI());
+	    request.setAttribute("page",page);
+    	return "system/page";
     }
 }

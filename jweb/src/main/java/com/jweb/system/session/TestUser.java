@@ -7,6 +7,7 @@ package com.jweb.system.session;
  * @date: 2018年1月31日 下午4:20:15  
  */
 public class TestUser{
+	private String id;
 	private String name;
 	private String pass;
 	public TestUser() {}
@@ -14,6 +15,12 @@ public class TestUser{
 		super();
 		this.name = name;
 		this.pass = pass;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	public String getName() {
 		return name;

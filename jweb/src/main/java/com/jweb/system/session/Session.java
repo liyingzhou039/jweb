@@ -1,7 +1,5 @@
 package com.jweb.system.session;
 
-import com.jweb.system.entity.User;
-
  /** 
  * @ClassName: Session 
  * @Description: TODO
@@ -19,16 +17,16 @@ public class Session {
             return null;
         }
     };
-	private static UserHolder<User> userHolder = new MapUserHolder<User>();
+	private static UserHolder<TestUser> userHolder = new MapUserHolder<>();
 	
 	public static void setCurrentToken(String token) {
 		tokenThreadLocal.set(token);
 	}
-	public static User getCurrentUser() {
+	public static TestUser getCurrentUser() {
 		String token = tokenThreadLocal.get();
 		return userHolder.get(token);
 	}
-	public static String setCurrentUser(User user) {
+	public static String setCurrentUser(TestUser user) {
 		String key = user.getId();
 		String token = userHolder.put(key,user);
 		tokenThreadLocal.set(token);
