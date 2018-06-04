@@ -1,0 +1,10 @@
+._root{
+	padding-bottom:1000px;
+	height:100%;
+}
+._temp{
+  	border:solid green 1px !important;
+}
+._services,._portals{
+ 	border:dotted gray 1px;
+} 

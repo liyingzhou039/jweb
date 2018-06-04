@@ -1,14 +1,16 @@
 [
 	{
-		"id": "components",
+		"id": "portals",
 		"name":"组件",
 		"data": [
 			{
 				"id": "portal.nav.Sidebar",
+				"type": "portal",
 				"name": "侧边工具栏"
 			},
 			{
 				"id": "portal.layout.Container",
+				"type": "portal", 
 				"name": "容器"
 			}
 		]
@@ -19,10 +21,12 @@
 		"data": [
 			{
 				"id": "js/services.json",
+				"type": "service",
 				"name": "服务列表"
 			},
 			{
 				"id": "js/portals.json",
+				"type": "service",
 				"name": "组件列表"
 			}
 		]

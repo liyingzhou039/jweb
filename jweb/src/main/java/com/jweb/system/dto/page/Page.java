@@ -56,6 +56,7 @@ public class Page {
 		List<String> csses = new ArrayList<>();
 		//required css
 		csses.add("plugins/bootstrap-4.0.0/css/bootstrap.min.css");
+		csses.add("css/page-editor.css");
 		//required js
 		jses.add("plugins/jquery-2.1.4/jquery.min.js");
 		jses.add("plugins/proper/popper.min.js");
@@ -79,7 +80,7 @@ public class Page {
 	    for(String js:jses) {
 	    	head.append("\t<script src='"+prefix+js+"?only="+System.currentTimeMillis()+"'></script>\n");
 	    }
-	    head.append("\t<title>页面</title><style>.row DIV{border:dotted black 1px;}</style>\n");
+	    head.append("\t<title>页面</title>\n");
 	    return head.toString();
 	}
 	
