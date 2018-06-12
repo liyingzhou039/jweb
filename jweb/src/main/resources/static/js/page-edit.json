@@ -1,5 +1,11 @@
 {
 	"prefix":"",
+	"csses":[
+	"css/base.css",
+	"css/page-edit.css"
+	],
+	"jses":[
+	],
 	"portals":[
 		{
 			"id":"container",
@@ -16,7 +22,7 @@
 							"type":"portal.page.ToolBar",
 							"clazz":"col-sm-2",
 							"input":[
-								{"id":"js/toolbar.json.success"}
+								{"id":"service1.success"}
 							],
 							"output":[
 							]
@@ -26,9 +32,10 @@
 							"type":"portal.page.PageEditor",
 							"clazz":"col-sm",
 							"input":[
-								{"id":"js/page-edit.json.success"}
+								{"id":"service2.success"}
 							],
 							"output":[
+								{"id":"savePage"}
 							]
 						}
 					]
@@ -38,7 +45,9 @@
 	],
 	"services":[
 		{
-			"id":"js/toolbar.json",
+			"id":"service1",
+			"method":"GET",
+			"uri":"js/toolbar.json",
 			"name":"工具列表",
 			"input":[
 				{"id":"page._start"}
@@ -49,10 +58,40 @@
 			]
 		},
 		{
-			"id":"js/page-edit.json",
-			"name":"页面-编辑页面",
+			"id":"service2",
+			"method":"GET",
+			"uri":"rest/page/getByURI?uri={page.uri}",
+			"name":"页面-获取当前页面数据",
 			"input":[
-				{"id":"page._start"}
+				{"id":"page._start"},
+				{"id":"service3.success"},
+				{"id":"service4.success"}
+			],
+			"output":[
+				{"id":"success"},
+				{"id":"error"}
+			]
+		},
+		{
+			"id":"service3",
+			"method":"POST",
+			"uri":"rest/bean/create{beanName}",
+			"name":"保存实体",
+			"input":[
+				{"id":"pagecontent.savePage"}
+			],
+			"output":[
+				{"id":"success"},
+				{"id":"error"}
+			]
+		},
+		{
+			"id":"service4",
+			"method":"PUT",
+			"uri":"rest/bean/update{beanName}",
+			"name":"更新实体",
+			"input":[
+				{"id":"pagecontent.updatePage"}
 			],
 			"output":[
 				{"id":"success"},

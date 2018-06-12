@@ -44,9 +44,7 @@ function portal_page_ToolBar(){
 				window['_current_drag']=node;
 			};
 			$nodes[i].ondragend=function(e){
-				$("#_temp_service").remove();
-				$("#_temp_portal").remove();
-				$("._success").removeClass("_success");
+				window['_current_drag']=null;
 			};
 		}
 		$this.find(".nav-item").eq(0).trigger("click");

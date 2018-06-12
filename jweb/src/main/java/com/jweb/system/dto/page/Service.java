@@ -7,6 +7,10 @@ import java.util.Map;
 public class Service {
 	private String id;
 	private String name;
+	private String uri;
+	private String method;
+	private String contentType;
+	
 	private List<Map<String,String>>  input = new ArrayList<>();
 	private List<Map<String,String>>  output = new ArrayList<>();
 	public String getId() {
@@ -20,6 +24,26 @@ public class Service {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getUri() {
+		return uri;
+	}
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
+	
+	public String getMethod() {
+		return method;
+	}
+	public void setMethod(String method) {
+		this.method = method;
+	}
+	public String getContentType() {
+		return contentType;
+	}
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
 	public List<Map<String, String>> getInput() {
 		return input;

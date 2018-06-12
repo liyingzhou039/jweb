@@ -1,0 +1,35 @@
+._jweb_col,._jweb_row{
+	border:dotted gray 1px;
+}
+._jweb_row{
+	min-height:40px;
+	magin:5px;
+}
+._jweb_col{
+	margin-left:20px;
+	margin-right:20px;
+	min-height:40px;
+}
+._jweb_portal_title{
+	color:gray;
+	font-size:10px;
+	float:center;
+	line-height:12px;
+}
+
+._jweb_service{
+	float:left;
+	width:100px;
+	height:100px;
+	border:dotted gray 1px;
+	margin:22px;
+}
+._jweb_service_delete,._jweb_portal_delete{
+	position:absolute;
+	cursor:pointer;
+}
+._jweb_output{
+	border:dotted gray 1px;
+	float:right;
+	width:80px;
+}

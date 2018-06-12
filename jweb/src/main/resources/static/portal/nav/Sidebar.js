@@ -1,4 +1,4 @@
-function portal_nav_SideBar(){
+function portal_nav_Sidebar(){
 	var h='';
 	h+='<div id="'+this.id+'" class="'+this.clazz+'"></div>';
 	$(this.parent).append(h);

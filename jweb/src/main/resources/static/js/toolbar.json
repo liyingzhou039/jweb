@@ -4,14 +4,33 @@
 		"name":"组件",
 		"data": [
 			{
-				"id": "portal.nav.Sidebar",
-				"type": "portal",
-				"name": "侧边工具栏"
+				"id": "portal0",
+				"targetType":"portal",
+				"type": "portal.layout.Container",
+				"name": "容器",
+				"clazz":"row",
+				"input":[],
+				"output":[]
 			},
 			{
-				"id": "portal.layout.Container",
-				"type": "portal", 
-				"name": "容器"
+				"id": "portal1",
+				"targetType":"portal",
+				"type": "portal.nav.Sidebar",
+				"name": "侧边栏",
+				"clazz":"col-sm",
+				"input":[],
+				"output":[]
+			},
+			{
+				"id": "portal2",
+				"targetType":"portal",
+				"type": "portal.page.ToolBar",
+				"name": "工具栏",
+				"clazz":"col-sm",
+				"input":[],
+				"output":[
+					{"id":"click"}
+				]
 			}
 		]
 	},
@@ -20,14 +39,27 @@
 		"name":"服务",
 		"data": [
 			{
-				"id": "js/services.json",
-				"type": "service",
-				"name": "服务列表"
+				"id":"service1",
+				"targetType":"service",
+				"method":"GET",
+				"uri":"rest/page/getByURI",
+				"name":"获取页面数据",
+				"input":[],
+				"output":[
+					{"id":"success"},
+					{"id":"error"}
+				]
 			},
 			{
-				"id": "js/portals.json",
-				"type": "service",
-				"name": "组件列表"
+				"id":"service2",
+				"targetType":"service",
+				"uri": "js/toolbar.json",
+				"name": "组件列表",
+				"input":[],
+				"output":[
+					{"id":"success"},
+					{"id":"error"}
+				]
 			}
 		]
 	}

@@ -6,22 +6,44 @@ import java.util.List;
 import com.jweb.system.util.JsonUtil;
 
 public class Page {
-	private String requestURI;
+	private String id;
+	private String name;
+	private String uri;
 	private String prefix;
 	private List<Portal> portals = new ArrayList<>();
 	private List<Service> services = new ArrayList<>();
+	
+	private List<String> jses = new ArrayList<>();
+	private List<String> csses = new ArrayList<>();
 	
 	public Page() {
 		
 	}
 	
-	public String getRequestURI() {
-		return requestURI;
+	public String getId() {
+		return id;
 	}
-	public void setRequestURI(String requestURI) {
-		this.requestURI = requestURI;
+
+	public void setId(String id) {
+		this.id = id;
 	}
-	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getUri() {
+		return uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
+
 	public String getPrefix() {
 		return prefix;
 	}
@@ -45,23 +67,37 @@ public class Page {
 		this.services = services;
 	}
 
+	public List<String> jses() {
+		return jses;
+	}
+
+	public void setJses(List<String> jses) {
+		this.jses = jses;
+	}
+
+	public List<String> csses() {
+		return csses;
+	}
+
+	public void setCsses(List<String> csses) {
+		this.csses = csses;
+	}
+
 	public String getScript() {
-		return "var page={}; page.prefix='"+this.prefix+"'; page.portals = "+JsonUtil.beanToJson(this.portals)+"; page.services = "+JsonUtil.beanToJson(this.services)+";";
+		return "var page={};page.uri='"+this.uri+"'; page.prefix='"+this.prefix+"'; page.portals = "+JsonUtil.beanToJson(this.portals)+"; page.services = "+JsonUtil.beanToJson(this.services)+";";
 	}
 	public String getHeadHTML() {
 		String[] paths = getRequestPaths();
 		this.prefix = getPrefix(paths);
 		
-		List<String> jses = new ArrayList<>();
-		List<String> csses = new ArrayList<>();
 		//required css
-		csses.add("plugins/bootstrap-4.0.0/css/bootstrap.min.css");
-		csses.add("css/page-editor.css");
+		csses.add(0,"plugins/bootstrap-4.0.0/css/bootstrap.min.css");
+		csses.add("css/base.css");
 		//required js
-		jses.add("plugins/jquery-2.1.4/jquery.min.js");
-		jses.add("plugins/proper/popper.min.js");
-		jses.add("plugins/bootstrap-4.0.0/js/bootstrap.min.js");
-		jses.add("js/base.js");
+		jses.add(0,"plugins/jquery-2.1.4/jquery.min.js");
+		jses.add(1,"plugins/proper/popper.min.js");
+		jses.add(2,"plugins/bootstrap-4.0.0/js/bootstrap.min.js");
+		jses.add(3,"js/base.js");
 		
 		for(Portal portal : portals) {
 			for(String js:portal.getJs()) {
@@ -85,14 +121,14 @@ public class Page {
 	}
 	
 	private String[] getRequestPaths() {
-		if(requestURI==null) return new String[] {};
-		if(requestURI.indexOf("?")!=-1) {
-			requestURI.substring(0,requestURI.indexOf("?"));
+		if(uri==null) return new String[] {};
+		if(uri.indexOf("?")!=-1) {
+			uri.substring(0,uri.indexOf("?"));
 		}
-		requestURI = requestURI.replace("//", "/").trim();
-		if(requestURI.startsWith("/")) requestURI = requestURI.substring(1);
-		if(requestURI.endsWith("/")) requestURI = requestURI.substring(0,requestURI.length());
-		return requestURI.split("/");
+		uri = uri.replace("//", "/").trim();
+		if(uri.startsWith("/")) uri = uri.substring(1);
+		if(uri.endsWith("/")) uri = uri.substring(0,uri.length());
+		return uri.split("/");
 	}
 	private String getPrefix(String[] paths) {
 		String prefix = "";

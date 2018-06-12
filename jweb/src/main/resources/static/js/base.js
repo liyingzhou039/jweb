@@ -20,7 +20,6 @@ $(function(){
 					page.messagesMap[portal.input[i].id]=[];
 				}
 				portal.targetType='portal';
-				console.log(portal.input);
 				page.messagesMap[portal.input[i].id].push(portal);
 			}
 		}
@@ -43,7 +42,7 @@ $(function(){
 		}
 	}
 	////////////////////////初始消息////////////////////////////
-	_message_sender('page._start',{});
+	_message_sender('page._start');
 });
 function _initPortal(portal,parent){
 	if(!parent) parent="BODY";
@@ -70,15 +69,34 @@ function _message_sender(msg,data){
 	}
 }
 function _message_service_handler(service,data){
+	if(!data) data ={};
+	if(!service.contentType){
+		service.contentType='application/x-www-form-urlencoded';
+	}
+	if(!service.method){
+		service.method='GET';
+	}
+	var url = service.uri;
+	//数据变量
+	for(var p in data){
+		url = url.replace('{'+p+'}',data[p]);
+	}
+	//page变量
+	for(var p in page){
+		url = url.replace('{page.'+p+'}',page[p]);
+	}
+	
 	$.ajax({
-		type :'GET',
-		url : page.prefix+service.id,
+		type :service.method,
+		url : page.prefix+url,
+		contentType:service.contentType,
 		dataType : 'json',
-		data : {},
+		data : data,
 		success : function(result) {
 			_message_sender(service.id+'.success',result);
 		},
-		error : function() {
+		error : function(e) {
+			console.log(e);
 			_message_sender(service.id+'.error',{msg:'系统错误'});
 		}
 	});
