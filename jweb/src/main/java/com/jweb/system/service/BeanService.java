@@ -9,8 +9,8 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
-
 import com.jweb.system.exception.BusiException;
 import com.jweb.system.persistent.BeanPool;
 import com.jweb.system.persistent.dialect.AbstractLchDialect;
@@ -28,7 +28,11 @@ import com.jweb.system.persistent.model.Where;
 public class BeanService {
 	@Autowired
 	DataSource dataSource;
-	private static AbstractLchDialect d= AbstractLchDialect.getDialect();
+	@Autowired
+	private  AbstractLchDialect d;
+	public AbstractLchDialect getDialect() {
+		return d;
+	}
 	public void createBeanTables() {
 		List<Table> tables = BeanPool.getBeanTables();
 		for(Table table:tables) {
@@ -49,19 +53,18 @@ public class BeanService {
 		String tbSql = d.getCreateTableSql(table);
 		Connection conn = null;
 		PreparedStatement st = null;  
-		System.out.println("创建表["+table.getTableName()+"]");
-		System.out.println(tbSql);
 		try {
-			conn = dataSource.getConnection(); 
+			conn = DataSourceUtils.doGetConnection(dataSource);
 			st=conn.prepareStatement(tbSql);  
             st.executeUpdate();
-            System.out.println("成功");
 		} catch (Exception e) {
+			System.out.println("创建表["+table.getTableName()+"]");
+			System.out.println(tbSql);
 			System.out.println("失败["+e.getMessage()+"]");
 		}finally{
 			try {
 				st.close();
-				conn.close();
+				DataSourceUtils.releaseConnection(conn, dataSource);
 			}catch(Exception e) {}
 		}
 	}
@@ -69,46 +72,43 @@ public class BeanService {
 		PrepareSql preSql=d.createBean(t);
 		Connection conn = null;
 		PreparedStatement st = null;  
-		System.out.println("创建["+t.getClass().getSimpleName()+"]");
-		System.out.println(preSql);
 		try {
-			conn = dataSource.getConnection(); 
+			conn = DataSourceUtils.doGetConnection(dataSource);
 			st=conn.prepareStatement(preSql.getSql()); 
 			setParams(st,preSql.getParams());
             st.executeUpdate();
-            System.out.println("成功");
 		} catch (Exception e) {
+			System.out.println("创建["+t.getClass().getSimpleName()+"]");
+			System.out.println(preSql);
 			System.out.println("失败["+e.getMessage()+"]");
 			throw new BusiException("创建["+t.getClass().getSimpleName()+"]失败");
 		}finally{
 			try {
 				st.close();
-				conn.close();
+				DataSourceUtils.releaseConnection(conn, dataSource);
 			}catch(Exception e) {}
 		}
 	}
 	public <T> void createBeans(List<T> ts) throws BusiException{
 		Connection conn = null;
 		PreparedStatement st = null;  
-		System.out.println("创建["+ts.getClass().getSimpleName()+"]");
-		
 		try {
-			conn = dataSource.getConnection(); 
+			conn = DataSourceUtils.doGetConnection(dataSource);
 			for(T t:ts) {
 				PrepareSql preSql=d.createBean(t);
 				st=conn.prepareStatement(preSql.getSql());
 				setParams(st,preSql.getParams());
-				System.out.println(preSql);
 				st.executeUpdate();
 			}
-            System.out.println("成功");
 		} catch (Exception e) {
+			System.out.println("创建["+ts.getClass().getSimpleName()+"]");
+			e.printStackTrace();
 			System.out.println("失败["+e.getMessage()+"]");
 			throw new BusiException("创建["+ts.getClass().getSimpleName()+"]失败");
 		}finally{
 			try {
 				st.close();
-				conn.close();
+				DataSourceUtils.releaseConnection(conn, dataSource);
 			}catch(Exception e) {}
 		}
 	}
@@ -116,21 +116,20 @@ public class BeanService {
 		PrepareSql preSql = d.removeBean(beanClass,id);
 		Connection conn = null;
 		PreparedStatement st = null;  
-		System.out.println("删除["+beanClass.getSimpleName()+"]");
-		System.out.println(preSql);
 		try {
-			conn = dataSource.getConnection(); 
+			conn = DataSourceUtils.doGetConnection(dataSource);
 			st=conn.prepareStatement(preSql.getSql()); 
 			setParams(st,preSql.getParams());
             st.executeUpdate();
-            System.out.println("成功");
 		} catch (Exception e) {
+			System.out.println("删除["+beanClass.getSimpleName()+"]");
+			System.out.println(preSql);
 			System.out.println("失败["+e.getMessage()+"]");
 			throw new BusiException("删除["+beanClass.getSimpleName()+"]失败");
 		}finally{
 			try {
 				st.close();
-				conn.close();
+				DataSourceUtils.releaseConnection(conn, dataSource);
 			}catch(Exception e) {}
 		}
 	}
@@ -138,31 +137,28 @@ public class BeanService {
 		PrepareSql preSql =d.removeBeans(beanClass,where);
 		Connection conn = null;
 		PreparedStatement st = null;  
-		System.out.println("删除["+beanClass.getSimpleName()+"]");
-		System.out.println(preSql);
 		try {
-			conn = dataSource.getConnection(); 
+			conn = DataSourceUtils.doGetConnection(dataSource); 
 			st=conn.prepareStatement(preSql.getSql()); 
 			setParams(st,preSql.getParams());
             st.executeUpdate();
-            System.out.println("成功");
 		} catch (Exception e) {
+			System.out.println("删除["+beanClass.getSimpleName()+"]");
+			System.out.println(preSql);
 			System.out.println("失败["+e.getMessage()+"]");
 			throw new BusiException("删除["+beanClass.getSimpleName()+"]失败");
 		}finally{
 			try {
 				st.close();
-				conn.close();
+				DataSourceUtils.releaseConnection(conn, dataSource);
 			}catch(Exception e) {}
 		}
 	}
 	public <T> void removeBeans(Class<T> beanClass,String[] ids) throws BusiException{
 		Connection conn = null;
 		PreparedStatement st = null;  
-		System.out.println("删除["+beanClass.getSimpleName()+"]");
-		
 		try {
-			conn = dataSource.getConnection(); 
+			conn = DataSourceUtils.doGetConnection(dataSource);
 			PrepareSql preSql=d.removeBean(beanClass,null);
 			st=conn.prepareStatement(preSql.getSql());  
 			System.out.println(preSql);
@@ -171,14 +167,13 @@ public class BeanService {
 				st.addBatch();
 			}
             st.executeBatch();
-            System.out.println("成功");
 		} catch (Exception e) {
 			System.out.println("失败["+e.getMessage()+"]");
 			throw new BusiException("删除["+beanClass.getSimpleName()+"]失败");
 		}finally{
 			try {
 				st.close();
-				conn.close();
+				DataSourceUtils.releaseConnection(conn, dataSource);
 			}catch(Exception e) {}
 		}
 	}
@@ -186,21 +181,20 @@ public class BeanService {
 		PrepareSql preSql = d.updateBean(t);
 		Connection conn = null;
 		PreparedStatement st = null;  
-		System.out.println("更新["+t.getClass().getSimpleName()+"]");
-		System.out.println(preSql);
 		try {
-			conn = dataSource.getConnection(); 
+			conn = DataSourceUtils.doGetConnection(dataSource);
 			st=conn.prepareStatement(preSql.getSql());  
 			setParams(st,preSql.getParams());
             st.executeUpdate();
-            System.out.println("成功");
 		} catch (Exception e) {
+			System.out.println("更新["+t.getClass().getSimpleName()+"]");
+			System.out.println(preSql);
 			System.out.println("失败["+e.getMessage()+"]");
 			throw new BusiException("更新["+t.getClass().getSimpleName()+"]失败");
 		}finally{
 			try {
 				st.close();
-				conn.close();
+				DataSourceUtils.releaseConnection(conn, dataSource);
 			}catch(Exception e) {}
 		}
 	}
@@ -213,11 +207,8 @@ public class BeanService {
 		PreparedStatement countSt = null; 
 		ResultSet beanRs = null;
 		ResultSet countRs = null;
-		System.out.println("查询["+beanClass.getSimpleName()+"]");
-		System.out.println(preSql);
-		System.out.println(preCountSql);
 		try {
-			conn = dataSource.getConnection(); 
+			conn = DataSourceUtils.doGetConnection(dataSource);
 			st=conn.prepareStatement(preSql.getSql());
 			setParams(st,preSql.getParams());
 			beanRs = st.executeQuery();
@@ -231,8 +222,10 @@ public class BeanService {
 				break;
 			}
 			pager.setTotal(total);
-			System.out.println("成功");
 		} catch (Exception e) {
+			System.out.println("查询["+beanClass.getSimpleName()+"]");
+			System.out.println(preSql);
+			System.out.println(preCountSql);
 			System.out.println("失败["+e.getMessage()+"]");
 			throw new BusiException("获取["+beanClass.getSimpleName()+"]失败");
 		}finally{
@@ -240,7 +233,7 @@ public class BeanService {
 				beanRs.close();
 				countRs.close();
 				st.close();
-				conn.close();
+				DataSourceUtils.releaseConnection(conn, dataSource);
 			}catch(Exception e) {}
 		}
 		return pager;
@@ -251,23 +244,22 @@ public class BeanService {
 		PreparedStatement st = null;  
 		ResultSet rs = null;
 		T o = null;
-		System.out.println("查询["+beanClass.getSimpleName()+"]");
-		System.out.println(preSql);
 		try {
-			conn = dataSource.getConnection(); 
+			conn = DataSourceUtils.doGetConnection(dataSource);
 			st=conn.prepareStatement(preSql.getSql());
 			setParams(st,preSql.getParams());
 			rs = st.executeQuery();
 			o = d.toBean(rs, beanClass);
-			System.out.println("成功");
 		} catch (Exception e) {
+			System.out.println("查询["+beanClass.getSimpleName()+"]");
+			System.out.println(preSql);
 			System.out.println("失败["+e.getMessage()+"]");
 			throw new BusiException("获取["+beanClass.getSimpleName()+"]失败");
 		}finally{
 			try {
 				rs.close();
 				st.close();
-				conn.close();
+				DataSourceUtils.releaseConnection(conn, dataSource);
 			}catch(Exception e) {}
 		}
 		return o;
@@ -278,23 +270,22 @@ public class BeanService {
 		Connection conn = null;
 		PreparedStatement st = null;  
 		ResultSet rs = null;
-		System.out.println("查询["+beanClass.getSimpleName()+"]");
-		System.out.println(preSql);
 		try {
-			conn = dataSource.getConnection(); 
+			conn = DataSourceUtils.doGetConnection(dataSource);
 			st=conn.prepareStatement(preSql.getSql());
 			setParams(st,preSql.getParams());
 			rs = st.executeQuery();
 			ls = d.toBeans(rs, beanClass);
-			System.out.println("成功");
 		} catch (Exception e) {
+			System.out.println("查询["+beanClass.getSimpleName()+"]");
+			System.out.println(preSql);
 			System.out.println("失败["+e.getMessage()+"]");
 			throw new BusiException("获取["+beanClass.getSimpleName()+"]失败");
 		}finally{
 			try {
 				rs.close();
 				st.close();
-				conn.close();
+				DataSourceUtils.releaseConnection(conn, dataSource);
 			}catch(Exception e) {}
 		}
 		return ls;

@@ -19,7 +19,7 @@ spring:
         username: 
         password: 
         type: org.sqlite.SQLiteDataSource
-        driver-class-name: org.sqlite.JDBC
+        driverClassName: org.sqlite.JDBC
 
 server:
   port: 8888

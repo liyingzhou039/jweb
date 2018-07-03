@@ -37,6 +37,10 @@
 		</dependency>
 		<!-- 数据源和驱动 -->
 		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+		<dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.0.11</version>
@@ -68,7 +72,12 @@
 		<dependency>
 	        <groupId>net.sourceforge.nekohtml</groupId>
 	        <artifactId>nekohtml</artifactId>
-	        </dependency>
+	    </dependency>
+	    <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+		<dependency>
+		    <groupId>redis.clients</groupId>
+		    <artifactId>jedis</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

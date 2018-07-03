@@ -1,67 +1,76 @@
 package com.jweb.system.config;
 
 import java.sql.SQLException;
-
 import javax.sql.DataSource;
-
-import com.jweb.system.util.StringUtil;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
-import org.springframework.context.EnvironmentAware;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.sqlite.SQLiteDataSource;
-
 import com.alibaba.druid.pool.DruidDataSource;
+import com.jweb.system.persistent.dialect.AbstractLchDialect;
+import com.jweb.system.persistent.dialect.MysqlDialect;
+import com.jweb.system.persistent.dialect.SqliteDialect;
 
+/**
+ * @author  liyz
+ */
 @Configuration
-public class DataSourceConfig implements EnvironmentAware{
-	 
-	private RelaxedPropertyResolver propertyResolver;
-	private String type;
+public class DataSourceConfig{
+	@Value("${spring.datasource.type:org.sqlite.SQLiteDataSource}")
+    private String type;
+	@Value("${spring.datasource.driverClassName:org.sqlite.JDBC}")
 	private String driveClassName;
+	@Value("${pring.datasource.url:jdbc:sqlite:jweb.db}")
 	private String url;
+	@Value("${spring.datasource.username:}")
 	private String userName;
+    @Value("${spring.datasource.password:}")
 	private String password;
-	   
+    @Value("${spring.datasource.filters:stat, wall}")
 	private String filters;
-	private String maxActive;
-	private String initialSize;
-	private String maxWait;
-	private String minIdle;
-	private String timeBetweenEvictionRunsMillis;
-	private String minEvictableIdleTimeMillis;
+    @Value("${spring.datasource.maxActive:10}")
+	private int maxActive;
+    @Value("${spring.datasource.initialSize:1}")
+	private int initialSize;
+    @Value("${spring.datasource.maxWait:60000}")
+	private int maxWait;
+    @Value("${spring.datasource.minIdle:3}")
+	private int minIdle;
+    @Value("${spring.datasource.timeBetweenEvictionRunsMillis:60000}")
+	private long timeBetweenEvictionRunsMillis;
+    @Value("${spring.datasource.minEvictableIdleTimeMillis:300000}")
+	private long minEvictableIdleTimeMillis;
+    @Value("${spring.datasource.validationQuery:select 'x'}")
 	private String validationQuery;
-	private String testWhileIdle;
-	private String testOnBorrow;
-	private String testOnReturn;
-	private String poolPreparedStatements;
-	private String maxOpenPreparedStatements;
-	@Override
-    public void setEnvironment(Environment environment) {
-        this.propertyResolver = new RelaxedPropertyResolver(environment, null);
-        this.type = propertyResolver.getProperty("spring.datasource.type");
-        this.url = propertyResolver.getProperty("spring.datasource.url");
-        this.userName= propertyResolver.getProperty("spring.datasource.username");
-        this.password = propertyResolver.getProperty("spring.datasource.password");
-        this.driveClassName = propertyResolver.getProperty("spring.datasource.driver-class-name");
-        this.filters = propertyResolver.getProperty("spring.datasource.filters");
-        this.maxActive = propertyResolver.getProperty("spring.datasource.maxActive");
-        this.initialSize = propertyResolver.getProperty("spring.datasource.initialSize");
-        this.maxWait = propertyResolver.getProperty("spring.datasource.maxWait");
-        this.minIdle = propertyResolver.getProperty("spring.datasource.minIdle");
-        this.timeBetweenEvictionRunsMillis = propertyResolver.getProperty("spring.datasource.timeBetweenEvictionRunsMillis");
-        this.minEvictableIdleTimeMillis = propertyResolver.getProperty("spring.datasource.minEvictableIdleTimeMillis");
-        this.validationQuery = propertyResolver.getProperty("spring.datasource.validationQuery");
-        this.testWhileIdle = propertyResolver.getProperty("spring.datasource.testWhileIdle");
-        this.testOnBorrow = propertyResolver.getProperty("spring.datasource.testOnBorrow");
-        this.testOnReturn = propertyResolver.getProperty("spring.datasource.testOnReturn");
-        this.poolPreparedStatements = propertyResolver.getProperty("spring.datasource.poolPreparedStatements");
-        this.maxOpenPreparedStatements = propertyResolver.getProperty("spring.datasource.maxOpenPreparedStatements");
-    }
+    @Value("${spring.datasource.testWhileIdle:true}")
+	private boolean testWhileIdle;
+    @Value("${spring.datasource.testOnBorrow:false}")
+	private boolean testOnBorrow;
+    @Value("${spring.datasource.testOnReturn:false}")
+	private boolean testOnReturn;
+    @Value("${spring.datasource.poolPreparedStatements:true}")
+	private boolean poolPreparedStatements;
+    @Value("${spring.datasource.maxOpenPreparedStatements:20}")
+	private int maxOpenPreparedStatements;
+	private DataSource datasource;
+
 	@Bean
+	public AbstractLchDialect dialect() {
+	    final  String source = "org.sqlite.SQLiteDataSource";
+		if(source.equals(this.type)) {
+			return new SqliteDialect();
+		}else {
+			return new MysqlDialect();
+		}
+	}
+	@Bean
+	public DataSource getDataSource() {
+		if(null==datasource) datasource = dataSource();
+		return datasource;
+	}
     public DataSource dataSource() {
-		if("org.sqlite.SQLiteDataSource".equals(this.type)) {
+        final  String source = "org.sqlite.SQLiteDataSource";
+		if(source.equals(this.type)) {
 			SQLiteDataSource sqliteDatasource = new SQLiteDataSource();
 			sqliteDatasource.setUrl(this.url);
 			return sqliteDatasource;
@@ -70,24 +79,22 @@ public class DataSourceConfig implements EnvironmentAware{
         druidDataSource.setUrl(url);
         druidDataSource.setUsername(userName);
         druidDataSource.setPassword(password);
-        druidDataSource.setDriverClassName(StringUtil.notNull(driveClassName)?driveClassName:"com.mysql.jdbc.Driver");
-        druidDataSource.setMaxActive(StringUtil.notNull(maxActive)? Integer.parseInt(maxActive):10);
-        druidDataSource.setInitialSize(StringUtil.notNull(initialSize)? Integer.parseInt(initialSize):1);
-        druidDataSource.setMaxWait(StringUtil.notNull(maxWait)? Integer.parseInt(maxWait):60000);
-        druidDataSource.setMinIdle(StringUtil.notNull(minIdle)? Integer.parseInt(minIdle):3);
-        druidDataSource.setTimeBetweenEvictionRunsMillis(StringUtil.notNull(timeBetweenEvictionRunsMillis)?
-                Integer.parseInt(timeBetweenEvictionRunsMillis):60000);
-        druidDataSource.setMinEvictableIdleTimeMillis(StringUtil.notNull(minEvictableIdleTimeMillis)?
-                Integer.parseInt(minEvictableIdleTimeMillis):300000);
-        druidDataSource.setValidationQuery(StringUtil.notNull(validationQuery)?validationQuery:"select 'x'");
-        druidDataSource.setTestWhileIdle(StringUtil.notNull(testWhileIdle)? Boolean.parseBoolean(testWhileIdle):true);
-        druidDataSource.setTestOnBorrow(StringUtil.notNull(testOnBorrow)? Boolean.parseBoolean(testOnBorrow):false);
-        druidDataSource.setTestOnReturn(StringUtil.notNull(testOnReturn)? Boolean.parseBoolean(testOnReturn):false);
-        druidDataSource.setPoolPreparedStatements(StringUtil.notNull(poolPreparedStatements)? Boolean.parseBoolean(poolPreparedStatements):true);
-        druidDataSource.setMaxOpenPreparedStatements(StringUtil.notNull(maxOpenPreparedStatements)? Integer.parseInt(maxOpenPreparedStatements):20);
+        druidDataSource.setDriverClassName(driveClassName);
+        druidDataSource.setMaxActive(maxActive);
+        druidDataSource.setInitialSize(initialSize);
+        druidDataSource.setMaxWait(maxWait);
+        druidDataSource.setMinIdle(minIdle);
+        druidDataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+        druidDataSource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+        druidDataSource.setValidationQuery(validationQuery);
+        druidDataSource.setTestWhileIdle(testWhileIdle);
+        druidDataSource.setTestOnBorrow(testOnBorrow);
+        druidDataSource.setTestOnReturn(testOnReturn);
+        druidDataSource.setPoolPreparedStatements(poolPreparedStatements);
+        druidDataSource.setMaxOpenPreparedStatements(maxOpenPreparedStatements);
 
         try {
-            druidDataSource.setFilters(StringUtil.notNull(filters)?filters:"stat, wall");
+            druidDataSource.setFilters(filters);
         } catch (SQLException e) {
             e.printStackTrace();
         }

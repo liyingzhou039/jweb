@@ -46,8 +46,11 @@
 	"services":[
 		{
 			"id":"service1",
-			"method":"GET",
-			"uri":"js/toolbar.json",
+			"type":"service.Request",
+			"data":{
+				"method":"GET",
+				"uri":"js/toolbar.json"
+			},
 			"name":"工具列表",
 			"input":[
 				{"id":"page._start"}
@@ -59,8 +62,11 @@
 		},
 		{
 			"id":"service2",
-			"method":"GET",
-			"uri":"rest/page/getByURI?uri={page.uri}",
+			"type":"service.Request",
+			"data":{
+				"method":"GET",
+				"uri":"rest/page/getByURI?uri={page.uri}"
+			},
 			"name":"页面-获取当前页面数据",
 			"input":[
 				{"id":"page._start"},
@@ -74,8 +80,11 @@
 		},
 		{
 			"id":"service3",
-			"method":"POST",
-			"uri":"rest/bean/create{beanName}",
+			"type":"service.Request",
+			"data":{
+				"method":"POST",
+				"uri":"rest/bean/create{beanName}"
+			},
 			"name":"保存实体",
 			"input":[
 				{"id":"pagecontent.savePage"}
@@ -87,8 +96,11 @@
 		},
 		{
 			"id":"service4",
-			"method":"PUT",
-			"uri":"rest/bean/update{beanName}",
+			"type":"service.Request",
+			"data":{
+				"method":"PUT",
+				"uri":"rest/bean/update{beanName}"
+			},
 			"name":"更新实体",
 			"input":[
 				{"id":"pagecontent.updatePage"}

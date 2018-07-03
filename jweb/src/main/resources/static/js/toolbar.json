@@ -41,8 +41,11 @@
 			{
 				"id":"service1",
 				"targetType":"service",
-				"method":"GET",
-				"uri":"rest/page/getByURI",
+				"type":"service.Request",
+				"data":{
+					"method":"GET",
+					"uri":"rest/page/getByURI"
+				},
 				"name":"获取页面数据",
 				"input":[],
 				"output":[
@@ -53,13 +56,25 @@
 			{
 				"id":"service2",
 				"targetType":"service",
-				"uri": "js/toolbar.json",
+				"type":"service.Request",
+				"data":{
+					"uri": "js/toolbar.json"
+				},
 				"name": "组件列表",
 				"input":[],
 				"output":[
 					{"id":"success"},
 					{"id":"error"}
 				]
+			},
+			{
+				"id": "service3",
+				"targetType":"service",
+				"type": "service.Message",
+				"data":{},
+				"name": "消息",
+				"input":[],
+				"output":[]
 			}
 		]
 	}

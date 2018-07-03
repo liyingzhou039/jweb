@@ -106,6 +106,14 @@ public class Page {
 				}
 			}
 		}
+
+		for(Service service : services) {
+			for(String js:service.getJs()) {
+				if(!jses.contains(js)) {
+					jses.add(js);
+				}
+			}
+		}
 		
 		StringBuffer head = new StringBuffer();
 		head.append("\n\t<meta charset='utf-8'/>\n");

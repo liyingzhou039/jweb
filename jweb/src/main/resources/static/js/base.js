@@ -69,37 +69,7 @@ function _message_sender(msg,data){
 	}
 }
 function _message_service_handler(service,data){
-	if(!data) data ={};
-	if(!service.contentType){
-		service.contentType='application/x-www-form-urlencoded';
-	}
-	if(!service.method){
-		service.method='GET';
-	}
-	var url = service.uri;
-	//数据变量
-	for(var p in data){
-		url = url.replace('{'+p+'}',data[p]);
-	}
-	//page变量
-	for(var p in page){
-		url = url.replace('{page.'+p+'}',page[p]);
-	}
-	
-	$.ajax({
-		type :service.method,
-		url : page.prefix+url,
-		contentType:service.contentType,
-		dataType : 'json',
-		data : data,
-		success : function(result) {
-			_message_sender(service.id+'.success',result);
-		},
-		error : function(e) {
-			console.log(e);
-			_message_sender(service.id+'.error',{msg:'系统错误'});
-		}
-	});
+    window[service.type.replace(/\./g,'_')].process(service,data);
 }
 function _message_portal_handler(portal,data){
 	portal.render(data);

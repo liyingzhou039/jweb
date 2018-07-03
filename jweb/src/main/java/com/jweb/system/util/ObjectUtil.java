@@ -2,6 +2,7 @@ package com.jweb.system.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,13 @@ public class ObjectUtil {
         }
         if(priTypes.contains(propType)){
         	return (T) o;
+        }else if(Date.class.equals(propType)) {
+        	if(o instanceof Long) {
+        		return (T) new Date(Long.valueOf(String.valueOf(o)));
+        	}else if(o instanceof Timestamp) {
+        		return (T) new Date(((Timestamp) o).getTime());
+        	}
+        	return null;
         }else {
         	//其他数据类型的处理
         	return null;
