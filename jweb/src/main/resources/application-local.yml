@@ -22,7 +22,7 @@ spring:
         driverClassName: org.sqlite.JDBC
 
 server:
-  port: 8888
+  port: 8080
   
 security:
   ignoredURI: /toLogin,/login,/rest/system/login/in,/error,/api/.*
