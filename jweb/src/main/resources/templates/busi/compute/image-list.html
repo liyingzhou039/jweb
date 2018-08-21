@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>镜像管理</title>
+    <link href="../plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../plugins/bootstrap/bootstrap-table/css/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../plugins/webuploader/css/webuploader.css" rel="stylesheet">
+    <!-- HTML5 Shiv 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+    <!-- 注意： 如果通过 file://  引入 Respond.js 文件，则该文件无法起效果 -->
+    <!--[if lt IE 9]>
+    <script src="../js/html5shiv.js"></script>
+    <script src="../js/respond.min.js"></script>
+    <![endif]-->
+    <link href="../css/content.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container-fluid">
+		<!-- 查询区 -->
+		<div class="row">
+			<div class="col-md-12">
+				<div  class="pull-left btn-group" role="group" aria-label="...">
+					<button id="add-btn" type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;增加</button>
+				</div>
+				<div class="pull-right form-inline">
+					<div class="form-group">
+						<label for="name">名称</label>
+						<input type="text" onchange="javascript:$('#search-btn').click();" class="form-control" id="name" placeholder="请输入名称">
+						<button id="search-btn" type="button" class="btn btn-primary"><i class="fa fa-search"></i>&nbsp;查询</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<table id="tableId"></table>
+			</div>
+		</div>
+	</div>
+	<div id="imageDialog" class="layer-dialog">
+        <div class="box-dialog box-dialog-step">
+            <input type="hidden" name="id" value=""/>
+            <ul class="box-step">
+                <li class="active">镜像信息</li>
+                <li>元数据</li>
+            </ul>
+            <div class="content-body">
+                <div class="row dialog-tab">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="name">镜像名称</label>
+                            <input type="text" required validType="length(0,200)"
+                                   class="form-control" name="name" placeholder="请输入镜像名称">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="description">镜像描述</label>
+                            <textarea  class="form-control" name="description" placeholder="描述"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="fileName">镜像文件</label>
+                            <select required class="form-control" name="fileName">
+
+                            </select>
+                            <button id="removeFile" type="button" class="btn btn-primary"
+                                    style="margin-top:5px;margin-left:5px;padding-top:9px;padding-bottom:9px;padding-left:15px;padding-right:15px;">-</button>
+                            <div id="fileUpload" style="float:left;margin-top:5px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="diskFormat">镜像格式</label>
+                            <select required class="form-control" name="diskFormat" placeholder="输入镜像格式">
+                                <option value="ISO">ISO</option>
+                                <option value="QCOW2">QCOW2</option>
+                                <option value="RAW">RAW</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="minDisk">最小磁盘(GB)</label>
+                            <input type="number" class="form-control" name="minDisk" value=0/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="minRam">最小内存(GB)</label>
+                            <input type="number" class="form-control" name="minRam" value=0/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row dialog-tab">
+                    <div class="col-md-12">
+                        <div class="box-key-value"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+</body>
+<script src="../plugins/jquery-2.1.4/jquery.min.js"></script>
+<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="../plugins/bootstrap/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../plugins/webuploader/js/webuploader.min.js"></script>
+<script src="../js/json2.js"></script>
+<script src="../js/util.js"></script>
+<script src="../js/lch.validate.js"></script>
+<script src="../js/table.js?v=3"></script>
+<script src="../js/dialog.js"></script>
+<script src="../js/key-value-box.js"></script>
+<script src="../js/busi/compute/image-list.js?v=1"></script>
+</html>

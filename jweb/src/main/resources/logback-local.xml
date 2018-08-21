@@ -16,7 +16,7 @@
             <fileNamePattern>logs/jweb.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
-    <logger name="com.jweb" level="error">
+    <logger name="com.jweb" level="info">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </logger>

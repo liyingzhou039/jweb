@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@ComponentScan(basePackages={"com.jweb.busi","com.jweb.system"}) 
+@ComponentScan(basePackages={"com.jweb"})
 public class JwebApplication {
 
 	public static void main(String[] args) {

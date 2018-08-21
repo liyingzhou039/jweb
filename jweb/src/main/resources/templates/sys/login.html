@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link href="plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<title>欢迎登录</title>
+<style>
+body,html{
+    	margin:0;
+    	padding:0;
+    	width:100%;
+    	height:100%;
+    	overflow:hidden;
+    	color:#333;
+    	font-size:16px;
+    	background-repeat: no-repeat;
+  		background-position:center;
+  		background-image: url("./images/login_bg.jpg");
+  		background-size:100% 100%;-moz-background-size:100% 100%;
+}
+.content{
+	margin:0;
+	padding:0;
+	width:100%;
+	height:100%;
+}
+.loginForm{
+	float: right;
+    margin-right: 160px;
+    margin-top: 10%;
+    background-color:white;
+    border-radius:5px;
+}
+.loginForm DIV{
+	margin-right:30px;
+	margin-left:30px;
+	padding:0;
+}
+INPUT,BUTTON{
+	color:#333;
+	font-size:14px;
+	width:280px;
+	height:40px;
+	border-radius:20px;
+	outline:none;
+	border:solid #4c96df 1px;
+}
+input {
+    background-color: white;
+    padding-left:20px;
+}
+button{
+	cursor:pointer;width:200px;font-size:16px;color:white;font-weight:bold;background:#4c96df;
+}
+BUTTON:hover{
+ 	background:#3b8ad9;
+}
+</style>
+</head>
+<body>
+<div class="content">
+	<div class="loginForm">
+			<div 
+			style="margin-top:50px;text-align:center;line-height:30px;height:30px;font-size:18px;color:#4c96df;font-family:微软雅黑;font-weight:bold;" 
+			>
+				<img src="./images/logo.png" style="width:30px;height:30px;vertical-align:middle;"/>
+				<span th:text='${"&nbsp;"+sysName}' style="vertical-align:middle;line-height:30px;"></span>
+		    </div>
+			<div style="margin-top:50px;">
+				<input type="text" id="username" name="username" autofocus placeholder="用户">
+			</div>
+			<div style="margin-top:40px;">
+				<input type="password" id="password" name="password" placeholder="密码">
+			</div>
+			<div style="margin-top:40px;margin-bottom:50px;">
+				<button type="button" id="login-button" >登录</button>
+			</div>
+	</div>
+</div>
+
+<script src="plugins/jquery-2.1.4/jquery.min.js"></script>
+<script src="js/util.js?v=1"></script>
+<script type="text/javascript">
+    document.addEventListener('keydown', function(){
+        if(event.keyCode===13){
+            loginIn();
+        }
+	});
+	$('#login-button').click(loginIn);
+	function loginIn(){
+		var username=$.trim($('#username').val());
+		var password=$.trim($('#password').val());
+		$.ajax({
+			type: "post",
+			url: "../rest/identity/login/in",
+			dataType: "json",
+			data:{
+				username:username,
+				password:password
+			},
+			success: function(r){
+				if(r&&r.ok){
+					localStorage.setItem('_token',r.entity.token);
+					localStorage.setItem('username',r.entity.name);
+					localStorage.setItem('userId',r.entity.id);
+					localStorage.setItem('projectId',r.entity.projectId);
+					localStorage.setItem('isAdmin',r.entity.admin);
+					location.href="/?_token="+r.entity.token;
+				}else{
+					alert(r.msg);
+				}
+			},
+			error: function() {
+				location.href="/login";
+			}
+		});
+	}
+</script>
+</body>
+</html>

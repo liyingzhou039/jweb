@@ -1,0 +1,81 @@
+[
+	{
+		"id": "portals",
+		"name":"组件",
+		"data": [
+			{
+				"id": "portal0",
+				"targetType":"portal",
+				"type": "portal.layout.Container",
+				"name": "容器",
+				"clazz":"row",
+				"input":[],
+				"output":[]
+			},
+			{
+				"id": "portal1",
+				"targetType":"portal",
+				"type": "portal.nav.Sidebar",
+				"name": "侧边栏",
+				"clazz":"col-sm",
+				"input":[],
+				"output":[]
+			},
+			{
+				"id": "portal2",
+				"targetType":"portal",
+				"type": "portal.page.ToolBar",
+				"name": "工具栏",
+				"clazz":"col-sm",
+				"input":[],
+				"output":[
+					{"id":"click"}
+				]
+			}
+		]
+	},
+	{
+		"id": "services",
+		"name":"服务",
+		"data": [
+			{
+				"id":"service1",
+				"targetType":"service",
+				"type":"service.Request",
+				"data":{
+					"method":"GET",
+					"uri":"rest/page/getByURI"
+				},
+				"name":"获取页面数据",
+				"input":[],
+				"output":[
+					{"id":"success"},
+					{"id":"error"}
+				]
+			},
+			{
+				"id":"service2",
+				"targetType":"service",
+				"type":"service.Request",
+				"data":{
+					"uri": "plugins/page/js/toolbar.json"
+				},
+				"name": "组件列表",
+				"input":[],
+				"output":[
+					{"id":"success"},
+					{"id":"error"}
+				]
+			},
+			{
+				"id": "service3",
+				"targetType":"service",
+				"type": "service.Message",
+				"data":{},
+				"name": "消息",
+				"input":[],
+				"output":[]
+			}
+		]
+	}
+]

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script src="plugins/jquery-2.1.4/jquery.min.js"></script>
+<script src="js/json2.js"></script>
+<title>跳转登录</title>
+</head>
+<body>
+<input id="user" type="hidden" th:value="${user}" />
+<script>
+var user = JSON.parse(document.getElementById("user").value.replace(/&quot/g,"\""));
+localStorage.setItem('_token',user.token);
+localStorage.setItem('username',user.username);
+localStorage.setItem('userId',user.id);
+localStorage.setItem('projectId',user.projectId);
+location.href="/?_token="+user.token;
+</script>
+</body>
+</html>

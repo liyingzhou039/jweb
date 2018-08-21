@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${sysName}"></title>
+    <link href="plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/sys/index.css?v=1" rel="stylesheet">
+</head>
+<body>
+<div id="app">
+    <div id="appHeader">
+        <div class="app-logo" onclick="goHome()">
+            <span class="icon"></span>
+            <span class="name" th:text='${sysName}'>地质云平台</span>
+        </div>
+        <div class="tab-titles">
+           
+        </div>
+        <!--user-->
+        <div class="user">
+            <span class="icon"><i class="fa fa-user" id="username"></i></span>
+            <ul class="dropdown">
+                <li class="quit" onclick="logout()">退出</li>
+            </ul>
+        </div>
+        <!-- div class="search">
+            <input id="menuSearch" type="text" placeholder="关键字/全拼/首字母" />
+            <i class="fa fa-search btn-search"></i>
+        </div-->
+    </div>
+  	<div id="appSider">
+        <div class="menu-btn menu-like" id="btnCollection">
+            <i class="fa fa-star-o"></i>
+            <span class="text">收藏夹</span>
+        </div>
+        <div class="menu-extend" id="btnMenuExtend">
+            <i class="fa fa-indent"></i>
+        </div>
+        <!--box-collection-->
+        <div id="appCollection">
+            <div class="header">
+                <span class="title">收藏夹</span>
+                <div class="btn-edit" id="btnCollectionEdit"><i class="fa fa-edit"></i></div>
+                <div class="btn-close" id="btnCollectionClose"><i class="fa fa-close"></i></div>
+            </div>
+            <ul class="items" id="items">
+            </ul>
+        </div>
+    </div>
+    <div id="appContent"></div>
+    <div id="appFooter" th:text='${"CopyRight © "+companyName}'></div>
+</div>
+</body>
+<script src="plugins/jquery-2.1.4/jquery.min.js"></script>
+<script src="plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="js/util.js?v=1"></script>
+<script src="js/sys/index.js?v=9"></script>
+</html>

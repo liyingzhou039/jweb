@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>登录跳转</title>
+</head>
+<body>
+<input id="ispUrl" type="hidden" th:value="${ispUrl}" />
+<script>
+var loginFrom = localStorage.getItem('loginFrom');
+var ispUrl = document.getElementById("ispUrl").value;
+localStorage.setItem('_token',null);
+localStorage.setItem('username',null);
+localStorage.setItem('userId',null);
+localStorage.setItem('projectId',null);
+localStorage.setItem('loginFrom',null);
+if(loginFrom=='isp'){
+	top.location.href=ispUrl.replace("7001","80")+"/login";
+}else{
+	top.location.href='/login';
+}
+</script>
+</body>
+</html>

@@ -78,6 +78,31 @@
 		    <groupId>redis.clients</groupId>
 		    <artifactId>jedis</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.3</version>
+		</dependency>
+
+		<!--**************************busi start*****************************-->
+		<!-- openstack4J start-->
+		<dependency>
+			<groupId>org.pacesys</groupId>
+			<artifactId>openstack4j-core</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.pacesys.openstack4j.connectors</groupId>
+			<artifactId>openstack4j-httpclient</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<!-- openstack4J end-->
+		<dependency>
+			<groupId>io.leopard</groupId>
+			<artifactId>javahost</artifactId>
+			<version>0.9.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -4,6 +4,10 @@ logging:
         com.jweb: DEBUG
     path: logs
 spring:
+    http:
+        multipart:
+            maxFileSize: 5120Mb
+            maxRequestSize: 5120Mb
     application:
         name: jweb
     thymeleaf:
@@ -13,16 +17,8 @@ spring:
         date-format: yyyy-MM-dd HH:mm:ss
         time-zone: GMT+8
         default-property-inclusion: NON_NULL
-    datasource:
-        name: test-db
-        url: jdbc:sqlite:jweb.db
-        username: 
-        password: 
-        type: org.sqlite.SQLiteDataSource
-        driverClassName: org.sqlite.JDBC
-
 server:
   port: 8080
   
 security:
-  ignoredURI: /toLogin,/login,/rest/system/login/in,/error,/api/.*
+  ignoredURI: /toLogin,/login,/rest/identity/login/in,/error,/api/.*
