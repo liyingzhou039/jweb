@@ -12,6 +12,18 @@ import java.util.List;
 
 public abstract class SyncBean {
     public abstract  String getId();
+    public String getCenterResourceId(Center center, BeanService beanService, CenterService centerService) throws BusiException{
+        this.syncResource(center,beanService,centerService);
+        List<LocalCenterRelation> lcs = beanService.list(
+                LocalCenterRelation.class
+                , Where.create("centerCode",Expression.eq,center.getCode())
+                        .and("beanName",Expression.eq,this.getClass().getSimpleName())
+                        .and("localResourceId",Expression.eq,this.getId()));
+        if(lcs==null || lcs.size()<=0 || !lcs.get(0).isSynced()){
+            throw new BusiException("中心["+center.getName()+"]未同步["+this.getClass().getSimpleName()+"]");
+        }
+        return lcs.get(0).getCenterResourceId();
+    }
     public String syncResource(Center center, BeanService beanService, CenterService centerService) throws BusiException{
         String centerResourceId = null;
 

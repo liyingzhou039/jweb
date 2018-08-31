@@ -7,11 +7,11 @@ public enum Expression {
         gt("${name} > ${value}"),
         lt("${name} < ${value}"),
         like("${name} like ${value}");
-	private String oper;
-	private Expression(String oper) {
-		this.oper = oper;
+	private String expression;
+	private Expression(String expression) {
+		this.expression = expression;
 	}
 	public String value() {
-		return this.oper;
+		return this.expression;
 	}
 }

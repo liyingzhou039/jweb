@@ -76,7 +76,7 @@ public class MysqlDialect extends AbstractLchDialect {
 			sql.append(" where  "+whereSql.getSql());
 			pre.getParams().addAll(whereSql.getParams());
 		}
-		if(null!=orderBy) {sql.append(" order by "+orderBy);}
+		if(null!=orderBy && !"".equals(orderBy.trim())) {sql.append(" order by "+orderBy);}
 		sql.append(" limit "+offset+","+limit+" ");
 		pre.setSql(sql.toString());
 		return pre;

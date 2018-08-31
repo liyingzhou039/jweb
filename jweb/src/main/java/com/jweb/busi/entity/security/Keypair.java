@@ -10,14 +10,15 @@ import com.jweb.common.persistent.annotation.Field;
 import com.jweb.common.persistent.model.Expression;
 import com.jweb.common.persistent.model.Where;
 import com.jweb.common.service.BeanService;
+import com.jweb.common.session.Session;
+import com.jweb.sys.dto.identity.LoginUser;
 import org.openstack4j.api.OSClient;
 import org.openstack4j.model.common.ActionResponse;
-import org.openstack4j.model.compute.SecGroupExtension;
 
 import java.util.List;
 
-@Bean(table="jweb_busi_security_group",name="安全组")
-public class SecurityGroup extends SyncBean {
+@Bean(table = "jweb_busi_security_keypair",name="密钥对")
+public class Keypair extends SyncBean {
     @Field(name="ID")
     private String id;
     @Field(name="创建者ID",required = true)
@@ -26,31 +27,40 @@ public class SecurityGroup extends SyncBean {
     private String projectId;
     @Field(name="名称",required = true)
     private String name;
-    @Field(name="描述",size=1000)
-    private String description;
+    @Field(name="公钥",type="TEXT")
+    private String publicKey;
+    @Field(name="私钥",type="TEXT")
+    private String privateKey;
 
-
+    @Override
     public String getId() {
-        return id;
+        return this.id;
     }
 
     @Override
-    protected String createCenterResource(Center center, BeanService beanService,CenterService centerService) throws BusiException {
+    protected String createCenterResource(Center center, BeanService beanService, CenterService centerService) throws BusiException {
         String centerResourceId = null;
         try {
+            LoginUser user = Session.getCurrentUser();
             OSClient.OSClientV3 os = centerService.os(center);
-            SecGroupExtension centerGroup = os.compute().securityGroups().create(CenterService.PREFFIX+center.getCode()+"-"+this.getId(),this.getName());
-            if(centerGroup==null){
-                throw new BusiException("");
+            //先从本地获取公钥，如果获取到了，则用本地的公钥创建，否则自动生成
+            List<Keypair> keypairs = beanService.list(Keypair.class,
+                        Where.create("name",Expression.eq,this.getName())
+                        .and("projectId",Expression.eq,user.getProjectId())
+                    );
+            String publicKey = null;
+            if(keypairs!=null && keypairs.size()>0){
+                publicKey = keypairs.get(0).getPublicKey();
             }
-            centerResourceId = centerGroup.getId();
-            //创建安全组默认会创建两条规则，尝试删除
-            List<? extends org.openstack4j.model.network.SecurityGroupRule> rules = os.networking().securityrule().list();
-            for(org.openstack4j.model.network.SecurityGroupRule rule : rules){
-                if(rule.getSecurityGroupId().equals(centerResourceId)){
-                    os.networking().securityrule().delete(rule.getId());
-                }
+            org.openstack4j.model.compute.Keypair kp = os.compute().keypairs().create(CenterService.PREFFIX
+                    +center.getCode()+this.getId(),publicKey);
+
+            if(publicKey==null){
+                this.setPublicKey(kp.getPublicKey());
+                this.setPrivateKey(kp.getPrivateKey());
+                beanService.update(this);
             }
+            centerResourceId = kp.getName();
         }catch (Exception e){
             e.printStackTrace();
             throw new BusiException("中心["+center.getName()+"]同步新增["+this.getName()+"]失败:"+e.getMessage());
@@ -59,12 +69,12 @@ public class SecurityGroup extends SyncBean {
     }
 
     @Override
-    protected void updateCenterResource(Center center, BeanService beanService,CenterService centerService) throws BusiException {
-        //不需要更新
+    protected void updateCenterResource(Center center, BeanService beanService, CenterService centerService) throws BusiException {
+        return ;
     }
 
     @Override
-    protected void removeCenterResource(Center center, BeanService beanService,CenterService centerService) throws BusiException {
+    protected void removeCenterResource(Center center, BeanService beanService, CenterService centerService) throws BusiException {
         try {
             OSClient.OSClientV3 os = centerService.os(center);
             List<LocalCenterRelation> removeLcs = beanService.list(
@@ -78,7 +88,7 @@ public class SecurityGroup extends SyncBean {
                 for(LocalCenterRelation removeLc : removeLcs){
                     try{
                         if(removeLc.getCenterResourceId()!=null) {
-                            ActionResponse r = os.compute().securityGroups().delete(removeLc.getCenterResourceId());
+                            ActionResponse r = os.compute().keypairs().delete(removeLc.getCenterResourceId());
                             if (r == null || !r.isSuccess()) {
                                 throw new BusiException("");
                             }
@@ -90,18 +100,6 @@ public class SecurityGroup extends SyncBean {
         }catch (Exception e){
             throw new BusiException("中心["+center.getName()+"]同步删除["+this.getClass().getSimpleName()+"]失败:"+e.getMessage());
         }
-    }
-    @Override
-    protected void syncDependency(Center center, BeanService beanService, CenterService centerService)
-            throws BusiException{
-        List<SecurityGroupRule> localRules = beanService.list(SecurityGroupRule.class,
-                Where.create("securityGroupId",Expression.eq,this.getId()),null);
-        if(null!=localRules){
-            for(SecurityGroupRule localRule : localRules){
-                localRule.syncResource(center,beanService,centerService);
-            }
-        }
-
     }
 
     public void setId(String id) {
@@ -132,12 +130,19 @@ public class SecurityGroup extends SyncBean {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPublicKey() {
+        return publicKey;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
 }

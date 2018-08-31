@@ -14,4 +14,8 @@ public class SecurityController {
     public String securityGroupRuleList(){
         return "busi/security/securityGroupRule-list";
     }
+    @RequestMapping("/keypair-list")
+    public String keypairList(){
+        return "busi/security/keypair-list";
+    }
 }

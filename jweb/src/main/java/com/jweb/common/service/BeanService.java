@@ -42,7 +42,6 @@ public class BeanService {
     public AbstractLchDialect getDialect() {
         return d;
     }
-
     public void createTables() {
         List<Table> tables = BeanPool.getBeanTables();
         for (Table table : tables) {

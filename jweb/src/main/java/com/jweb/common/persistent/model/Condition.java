@@ -1,15 +1,14 @@
 package com.jweb.common.persistent.model;
 
 public class Condition {
-	private String relation;
 	private String name;
 	private Expression expression;
-	private String value;
-	public String getRelation() {
-		return relation;
-	}
-	public void setRelation(String relation) {
-		this.relation = relation;
+	private Object value;
+	public Condition(){}
+	public Condition(String name,Expression ex,Object value){
+		this.name = name;
+		this.expression = ex;
+		this.value = value;
 	}
 	public String getName() {
 		return name;
@@ -23,10 +22,10 @@ public class Condition {
 	public void setExpression(Expression expression) {
 		this.expression = expression;
 	}
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
-	public void setValue(String value) {
+	public void setValue(Object value) {
 		this.value = value;
 	}
 }

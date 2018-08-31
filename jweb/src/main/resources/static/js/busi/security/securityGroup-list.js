@@ -1,7 +1,7 @@
 var securityGroupTable =null;
 $(function(){
     securityGroupTable = new LchTable({
-        url:'../rest/bean/SecurityGroupPager',
+        url:'../rest/security/securityGroup/pager',
         columns:[
             {
                 field: 'name',
@@ -31,18 +31,7 @@ $(function(){
         ],
         params:function () {
             return {
-        		conditions:JSON.stringify([
-                {
-                	relation:"and",
-                    expression:"like",
-                    name:"name",
-                    value:"%"+$("#name").val()+"%"
-                },{
-                	relation:"and",
-                    expression:"eq",
-                    name:"projectId",
-                    value:localStorage.getItem('projectId')
-                }])
+        		condition:"name=%"+$("#name").val()+"%"
         	};
         }
     });

@@ -70,13 +70,7 @@ $(function(){
         params:function () {
 
             return {
-                conditions:JSON.stringify([
-                {
-                	relation:"and",
-                    expression:"eq",
-                    name:"securityGroupId",
-                    value:util.getUrlParam('securityGroupId')
-                }])
+                condition:"securityGroupId="+util.getUrlParam('securityGroupId')
             };
         }
     });

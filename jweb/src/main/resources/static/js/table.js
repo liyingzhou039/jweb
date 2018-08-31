@@ -18,6 +18,9 @@ function LchTable(settings){
 	            	pa.pageSize =this.pageSize;
 	            	pa.pageNumber = this.pageNumber;
 	            }
+	            if(pa.condition){
+                    pa.condition = util.toHexString(pa.condition);
+	            }
 	            return pa;
 	        },
 	        params:function () {

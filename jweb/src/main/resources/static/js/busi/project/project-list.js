@@ -50,13 +50,7 @@ $(function(){
         ],
         params:function () {
             return {
-        		conditions:JSON.stringify([
-                {
-                	relation:"and",
-                    expression:"like",
-                    name:"name",
-                    value:"%"+$("#name").val()+"%"
-                }])
+        		condition:"name=%"+$("#name").val()+"%"
         	};
         }
     });
@@ -134,18 +128,7 @@ function addProject(){
 function editProject(id){
     var project = projectTable.getRowById(id);
     util.deserialize($("#dialog").find(".project-info"),project);
-    util.get('../rest/bean/Quota',{
-        conditions:JSON.stringify(
-            [
-                {
-                	relation:"and",
-                    expression:"eq",
-                    name:"projectId",
-                    value:id
-                }
-            ]
-        )
-    },function(quotas){
+    util.get('../rest/bean/Quota',{condition:"projectId="+id},function(quotas){
         if(quotas && quotas.length){
             util.deserialize($("#dialog").find(".project-quota"),quotas[0]);
         }
@@ -155,18 +138,7 @@ function editProject(id){
 
     //初始化用户选择框
     util.get('../rest/bean/User',{},function(users){
-        util.get('../rest/bean/ProjectUser',{
-            conditions:JSON.stringify(
-                [
-                    {
-                    	relation:"and",
-                        expression:"eq",
-                        name:"projectId",
-                        value:id
-                    }
-                ]
-            )
-        },function(projectUsers){
+        util.get('../rest/bean/ProjectUser',{condition:"projectId="+id},function(projectUsers){
             var des = [];
             for(var i=0;i<users.length;i++){
                 for(var j=0;j<projectUsers.length;j++){

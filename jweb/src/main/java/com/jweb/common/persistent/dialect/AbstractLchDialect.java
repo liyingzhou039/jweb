@@ -169,7 +169,7 @@ public abstract class  AbstractLchDialect {
 			sql.append(" where  "+whereSql.getSql());
 			pre.getParams().addAll(whereSql.getParams());
 		}
-		if(null!=orderBy) { sql.append(" order by "+orderBy);}
+		if(null!=orderBy && !"".equals(orderBy.trim())) { sql.append(" order by "+orderBy);}
 		pre.setSql(sql.toString());
 		return pre;
 	}
@@ -191,7 +191,7 @@ public abstract class  AbstractLchDialect {
 			sql.append(" where  "+whereSql.getSql());
 			pre.getParams().addAll(whereSql.getParams());
 		}
-		if(null!=orderBy) {sql.append(" order by "+orderBy);}
+		if(null!=orderBy && !"".equals(orderBy.trim())) {sql.append(" order by "+orderBy);}
 		sql.append(") t");
 		pre.setSql(sql.toString());
 		return pre;

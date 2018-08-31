@@ -53,13 +53,7 @@ $(function(){
         ],
         params:function () {
             return {
-                conditions:JSON.stringify([
-                {
-                	relation:"and",
-                    expression:"like",
-                    name:"name",
-                    value:'%'+$("#name").val()+'%'
-                }])
+                condition:"name=%"+$("#name").val()+"%"
             };
         }
     });
@@ -125,6 +119,7 @@ function initFileSelect(){
 function addImage(){
     util.deserialize($("#imageDialog"),{
         diskFormat:'ISO',
+        kernel:'LINUX',
         minDisk:0,
         minRam:0
     });

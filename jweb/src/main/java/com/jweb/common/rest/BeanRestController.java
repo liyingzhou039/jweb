@@ -2,13 +2,12 @@ package com.jweb.common.rest;
 
 import com.jweb.common.exception.BusiException;
 import com.jweb.common.persistent.BeanPool;
-import com.jweb.common.persistent.model.Condition;
 import com.jweb.common.persistent.model.Expression;
 import com.jweb.common.persistent.model.Where;
 import com.jweb.common.service.BeanService;
+import com.jweb.common.util.HexUtil;
 import com.jweb.common.util.JsonUtil;
 import com.jweb.common.util.Result;
-import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,67 +29,31 @@ public class BeanRestController {
     @Autowired
     protected BeanService beanService;
 
-    private Where transCondition(List<Condition> conditions) {
-        if (conditions == null || conditions.size() <= 0) {
-            return null;
-        }
-        Where where = null;
-        for (Condition c : conditions) {
-            if ("and".equals(c.getRelation())) {
-                if(where==null){
-                    where = Where.create(c.getName(), c.getExpression(), c.getValue());
-                }else {
-                    where.and(c.getName(), c.getExpression(), c.getValue());
-                }
-            } else if ("or".equals(c.getRelation())) {
-                if(where==null){
-                    where = Where.create(c.getName(), c.getExpression(), c.getValue());
-                }else {
-                    where.or(c.getName(), c.getExpression(), c.getValue());
-                }
-            }
-        }
-        return where;
-    }
 
-    private String transOrder(String order) {
-        if (null == order || order.trim().equals("")) {
-            return null;
-        }
-        return " " + order;
-    }
 
     @RequestMapping(value = "/{beanName}Pager", method = RequestMethod.GET)
     @ResponseBody
     public Object listPager(
             @PathVariable String beanName,
-            @RequestParam(defaultValue = "[]") String conditions,
+            @RequestParam(defaultValue = "") String condition,
             @RequestParam(defaultValue = "") String order,
             @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize) throws BusiException {
         Class<?> beanClass = BeanPool.getBeanClassBySimpleName(beanName);
-        return beanService.getPager(beanClass, pageNumber, pageSize,
-                transCondition(JsonUtil.jsonToBean(
-                        conditions,
-                        new TypeReference<List<Condition>>() {
-                        })),
-                transOrder(order));
+        Where where = Where.parse(HexUtil.decode(condition));
+        return beanService.getPager(beanClass, pageNumber, pageSize,where,order);
     }
 
     @RequestMapping(value = "/{beanName}", method = RequestMethod.GET)
     @ResponseBody
     public Object list(
             @PathVariable String beanName,
-            @RequestParam(defaultValue = "[]") String conditions,
+            @RequestParam(defaultValue = "") String condition,
             @RequestParam(defaultValue = "") String order
     ) throws BusiException {
         Class<?> beanClass = BeanPool.getBeanClassBySimpleName(beanName);
-        return beanService.list(beanClass,
-                transCondition(JsonUtil.jsonToBean(
-                        conditions,
-                        new TypeReference<List<Condition>>() {
-                        })),
-                transOrder(order));
+        Where where = Where.parse(HexUtil.decode(condition));
+        return beanService.list(beanClass,where,order);
     }
 
     @RequestMapping(value = "/{beanName}/{id}", method = RequestMethod.GET)

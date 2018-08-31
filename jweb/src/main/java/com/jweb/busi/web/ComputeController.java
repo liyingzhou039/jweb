@@ -14,4 +14,8 @@ public class ComputeController {
     public String imageList(){
         return "busi/compute/image-list";
     }
+    @RequestMapping("/server-list")
+    public String serverList(){
+        return "busi/compute/server-list";
+    }
 }

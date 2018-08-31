@@ -40,13 +40,7 @@ $(function(){
 	$('#search-btn').on('click', function () {
 		menuTable.curRow = null;
 		menuTable.bootstrapTreeTable('refresh',{
-			conditions:JSON.stringify([
-        		{
-        		relation:"and",
-        		expression:"like",
-        		name:"name",
-        		value:"%"+$("#name").val()+"%"
-        		}])
+			condition:util.toHexString("name=%"+$("#name").val()+"%")
         });
 		elementTable.search();
     });
@@ -111,13 +105,7 @@ $(function(){
 			if(menuTable.curRow)
 				menuId = menuTable.curRow.code;
 			return {
-				conditions:JSON.stringify([
-            		{
-            		relation:"and",
-            		expression:"eq",
-            		name:"menuId",
-            		value:menuId
-            		}])
+				condition:"menuId="+menuId
 			};
 		}
 	});
@@ -291,4 +279,3 @@ $(function(){
 		});
 	}
 });
-

@@ -172,6 +172,7 @@ function refreshFavorites(){
 	//收藏列表需要重新修改为-当前用户的收藏
 	util.list(
 	    'Favorite',
+	    {condition:"username ="+localStorage.getItem('username')},
 	    function(data){
             var h ='';
             for(var i=0;i<data.length;i++){
@@ -188,13 +189,7 @@ function refreshFavorites(){
                 });
                 event.stopPropagation();
             });
-        },
-        [{
-            relation:"and",
-            expression:"eq",
-            name:"username",
-            value:localStorage.getItem('username')
-        }]
+        }
 	);
     
 }
@@ -251,7 +246,9 @@ var sys={
 	        	fa.winId=$(this).parent().attr("winid");
 	        	fa.name=$(this).parent().attr("wintitle");
 	        	fa.url=$(this).parent().attr("winurl");
-	        	util.list('Favorite',function(r){
+	        	util.list('Favorite',
+                {condition:"winId="+fa.winId+" && username="+fa.username},
+	        	function(r){
 	        		if(r&&r.length){
 	        			$like.animate(end,1000,'swing',function(){
 	        				$like.remove();
@@ -270,19 +267,7 @@ var sys={
 	                    	});
 	                	});
 	        		}
-	        	},[
-                	{
-                		relation:"and",
-                		expression:"eq",
-                		name:"winId",
-                		value:fa.winId
-                	},{
-                  		relation:"and",
-                  		expression:"eq",
-                  		name:"username",
-                  		value:fa.username
-                  	}
-                ]);
+	        	});
 	        });
 	        
 	        var self = this;

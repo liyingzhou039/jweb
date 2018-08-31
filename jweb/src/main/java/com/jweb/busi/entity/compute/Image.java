@@ -47,6 +47,8 @@ public class Image extends SyncBean {
     private String status;
     @Field(name="元数据",type = "TEXT")
     private String metadataJson;
+    @Field(name = "内核")
+    private String kernel;
     Map<String,String> metadata;
 
     public String getId() {
@@ -251,5 +253,13 @@ public class Image extends SyncBean {
 
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
+    }
+
+    public String getKernel() {
+        return kernel;
+    }
+
+    public void setKernel(String kernel) {
+        this.kernel = kernel;
     }
 }

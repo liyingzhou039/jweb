@@ -1,4 +1,14 @@
 var util={
+        toHexString:function(str) {
+            if(!str)
+                return "";
+            var hexes = [];
+            for(var i = 0; i < str.length; i++) {
+                hexes.push("0x");
+                hexes.push((str.charCodeAt(i)).toString(16));
+            }
+            return hexes.join("");
+        },
         uuid:function(){
 		    function S4(){
 		        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -216,6 +226,9 @@ var util={
 			return this.request(url,params,callback,options);
 		},
 		request:function(url,params,callback,options){
+		    if(params&&params.condition){
+                params.condition=util.toHexString(params.condition);
+            }
 		    if(!options) options={};
 		    var defaultOptions={
 		        type:'GET',
@@ -234,17 +247,15 @@ var util={
 		    }
 		    $.ajax(defaultOptions);
 		},
-		list:function(beanName,callback,conditions,order){
-			if(!conditions) conditions=[];
-			if(!order) order='';
+		list:function(beanName,params,callback){
+			if(params&&params.condition){
+                params.condition=util.toHexString(params.condition);
+			}
 			$.ajax({
 				type :'GET',
 				url : '/rest/bean/'+beanName,
 				dataType : 'json',
-				data : {
-					conditions:JSON.stringify(conditions),
-					order:order
-				},
+				data : params,
 				success : function(data) {
 					callback(data);
 				},

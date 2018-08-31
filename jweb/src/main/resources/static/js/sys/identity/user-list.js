@@ -60,13 +60,7 @@ $(function(){
         ],
         params:function () {
             return {
-        		conditions:JSON.stringify([
-                {
-                	relation:"and",
-                    expression:"like",
-                    name:"username",
-                    value:"%"+$("#name").val()+"%"
-                }])
+        		condition:"username=%"+$("#name").val()+"%"
         	};
         }
     });
@@ -84,7 +78,7 @@ function addUser(){
     $("#userDialog").find("INPUT[name='username']").attr('validType','length(0,20);exists(../rest/bean/existsUser,username)');
     $("#userDialog").find("INPUT[name='username']").removeAttr('disabled');
     //初始化角色选择框
-    util.list('Role',function(roles){
+    util.list('Role',{},function(roles){
         roleSelectBox = new SelectBox({
             content:'#roleSelectBox',
             id:'name',
@@ -144,8 +138,8 @@ function editUser(id,activeIndex){
     $("#userDialog").find("INPUT[name='username']").attr('disabled','');
     //初始化角色选择框
 
-    util.list('UserRole',function(userRoles){
-        util.list('Role',function(roles){
+    util.list('UserRole',{condition:"userId="+id},function(userRoles){
+        util.list('Role',{},function(roles){
             var des=[];
             for(var i=0;i<roles.length;i++){
                 for(var j=0;j<userRoles.length;j++){
@@ -164,12 +158,7 @@ function editUser(id,activeIndex){
                 des:des
             });
         });
-    },[{
-        relation:"and",
-        expression:"eq",
-        name:"userId",
-        value:id
-    }]);
+    });
 
     var d = Dialog.open({
         content:'#userDialog',

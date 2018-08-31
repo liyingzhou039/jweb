@@ -55,13 +55,7 @@ $(function(){
         params:function () {
 
             return {
-                conditions:JSON.stringify([
-                {
-                	relation:"and",
-                    expression:"like",
-                    name:"name",
-                    value:'%'+$("#name").val()+'%'
-                }])
+                condition:"name=%"+$("#name").val()+"%"
             };
         }
     });
