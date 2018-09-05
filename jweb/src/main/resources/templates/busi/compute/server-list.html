@@ -82,6 +82,52 @@
 			</div>
 		</div>
 	</div>
+	<div id="terminalDialog" class="layer-dialog">
+		<div class="box-dialog">
+			<div class="content-body">
+				<div class="row">
+					<div class="col-md-12">
+						<iframe id="vncWindow" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no">
+						</iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="snapshotDialog" class="layer-dialog">
+		<div class="box-dialog">
+			<div class="content-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div  id="snapshotToolbar">
+							<div  class="btn-group" role="group" aria-label="...">
+								<button onclick="createSnapshot()" type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;备份</button>
+							</div>
+						</div>
+						<table id="snapshotTableId"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="volumeDialog" class="layer-dialog">
+		<div class="box-dialog">
+			<div class="content-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div  id="volumeToolbar">
+							<div  class="btn-group" role="group" aria-label="...">
+								<input style="float:left;" type="text" required class="form-control" name="name" placeholder="磁盘名称">
+								<input style="float:left;" type="number" required class="form-control" name="size" placeholder="磁盘大小（GB）">
+								<button onclick="createVolume()" type="button" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+							</div>
+						</div>
+						<table id="volumeTableId"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 <script src="../plugins/jquery-2.1.4/jquery.min.js"></script>
 <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>

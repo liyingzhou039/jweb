@@ -49,7 +49,7 @@ function LchTable(settings){
 LchTable.prototype={
 	constructor:LchTable,
 	search:function(params){
-		this.view.bootstrapTable('refresh');
+		this.view.bootstrapTable('refresh',params);
 	},
 	getRowById:function(id){
 		return this.view.bootstrapTable('getRowByUniqueId',id);

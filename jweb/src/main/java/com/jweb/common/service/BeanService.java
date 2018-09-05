@@ -9,6 +9,7 @@ import com.jweb.common.persistent.model.Table;
 import com.jweb.common.persistent.model.Where;
 import com.jweb.common.util.JsonUtil;
 import com.jweb.common.util.Pager;
+import com.jweb.common.util.RegexUtil;
 import com.jweb.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -20,9 +21,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @ClassName: BeanService
@@ -357,6 +356,67 @@ public class BeanService {
             System.out.println(preSql);
             System.out.println("失败[" + e.getMessage() + "]");
             throw new BusiException("获取[" + beanClass.getSimpleName() + "]失败");
+        } finally {
+            try {
+                rs.close();
+                st.close();
+                DataSourceUtils.releaseConnection(conn, dataSource);
+            } catch (Exception e) {
+            }
+        }
+        return ls;
+    }
+
+    public <T> T queryOne(Class<T> clazz,String hql,Object... params) throws  BusiException{
+        List<T> ls = this.query(clazz,hql,params);
+        if(ls==null || ls.size()<1) return  null;
+        return ls.get(0);
+    }
+    public <T> List<T>  query(Class<T> clazz,String hql,Object... params) throws BusiException{
+        List<T> ls = new ArrayList<>();
+        if(hql==null) throw new BusiException("查询语句不能为空");
+        List<Class<?>> beanClasses = BeanPool.getBeans();
+        Map<String,String> beanNameTableNames = new HashMap<>();
+        if(beanClasses!=null){
+            for(Class beanClass:beanClasses){
+                beanNameTableNames.put(beanClass.getSimpleName(),BeanPool.getBeanTable(beanClass).getTableName());
+            }
+        }
+        for(String beanName:beanNameTableNames.keySet()){
+            hql = hql.replace(beanName,beanNameTableNames.get(beanName).toLowerCase());
+        }
+        List<String> words= RegexUtil.getRegText("([0-9a-zA-Z_]+)",hql);
+        //去掉关键字
+        List<String> keys = new ArrayList<>(Arrays.asList(
+                "select","from","limit","order","by","asc","desc","join",
+                "on","in","left","right","inner","group","and","or",
+                "where","update","delete","into"
+        ));
+        for(String word:words){
+            if(!keys.contains(word.toLowerCase())){
+                hql = hql.replace(word,StringUtil.toSlide(word));
+            }
+        }
+
+        PrepareSql preSql = new PrepareSql();
+        preSql.setSql(hql);
+        preSql.setParams(Arrays.asList(params));
+
+        System.out.println(preSql);
+        Connection conn = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            conn = DataSourceUtils.doGetConnection(dataSource);
+            st = conn.prepareStatement(preSql.getSql());
+            setParams(st, preSql.getParams());
+            rs = st.executeQuery();
+            ls = d.toBeans(rs, clazz);
+        } catch (Exception e) {
+            System.out.println("查询[" + clazz.getSimpleName() + "]");
+            System.out.println(preSql);
+            System.out.println("失败[" + e.getMessage() + "]");
+            throw new BusiException("获取[" + clazz.getSimpleName() + "]失败");
         } finally {
             try {
                 rs.close();

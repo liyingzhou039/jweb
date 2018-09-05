@@ -63,6 +63,9 @@ public abstract class SyncBean {
         else if(lcs.get(0).isSynced()==false&& lcs.get(0).getLocalResourceId()!=null && lcs.get(0).getCenterResourceId()!=null){
             centerResourceId = lcs.get(0).getCenterResourceId();
             this.updateCenterResource(center,beanService,centerService);
+            LocalCenterRelation localCenterRelation = lcs.get(0);
+            localCenterRelation.setSynced(true);
+            beanService.update(localCenterRelation);
         //2-4)本地有资源关系，synced=true,说明已经同步，无操作
         }else{
             centerResourceId = lcs.get(0).getCenterResourceId();

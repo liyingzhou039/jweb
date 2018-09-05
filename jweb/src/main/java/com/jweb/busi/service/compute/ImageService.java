@@ -35,6 +35,8 @@ public class ImageService {
     public Image update(Image image) throws BusiException {
         try{
             image.setMetadataJson(JsonUtil.beanToJson(image.getMetadata()));
+            Image oldImage = beanService.getById(Image.class,image.getId());
+            image.setSize(oldImage.getSize());
             image = syncBeanService.update(image);
         }catch (Exception e){
             throw new BusiException(e.getMessage());

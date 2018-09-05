@@ -3,6 +3,8 @@ package com.jweb.busi.entity.compute;
 import com.jweb.common.persistent.annotation.Bean;
 import com.jweb.common.persistent.annotation.Field;
 
+import java.util.Date;
+
 @Bean(table = "jweb_busi_compute_server",name="虚拟机")
 public class Server {
     @Field(name="ID")
@@ -21,18 +23,18 @@ public class Server {
     private String flavorId;
     @Field(name="安全组ID",required = true)
     private String securityGroupId;
-    @Field(name="管理员用户")
-    private String admin;
-    @Field(name="管理员密码")
-    private String adminPass;
-    @Field(name="IP")
-    private String ip;
-    @Field(name="状态")
-    private String status;
     @Field(name="中心ID")
     private String centerResourceId;
     @Field(name="密钥ID")
     private String keypairId;
+
+    private String admin;
+    private String adminPass;
+    private String ip;
+    private String status;
+    private String vncUrl;
+    private Date createAt;
+
 
     public String getId() {
         return id;
@@ -126,6 +128,14 @@ public class Server {
         return ip;
     }
 
+    public String getVncUrl() {
+        return vncUrl;
+    }
+
+    public void setVncUrl(String vncUrl) {
+        this.vncUrl = vncUrl;
+    }
+
     public void setIp(String ip) {
         this.ip = ip;
     }
@@ -144,5 +154,13 @@ public class Server {
 
     public void setCenterResourceId(String centerResourceId) {
         this.centerResourceId = centerResourceId;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
     }
 }

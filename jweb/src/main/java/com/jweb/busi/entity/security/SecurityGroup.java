@@ -66,7 +66,6 @@ public class SecurityGroup extends SyncBean {
     @Override
     protected void removeCenterResource(Center center, BeanService beanService,CenterService centerService) throws BusiException {
         try {
-            OSClient.OSClientV3 os = centerService.os(center);
             List<LocalCenterRelation> removeLcs = beanService.list(
                     LocalCenterRelation.class
                     , Where.create("centerCode",Expression.eq,center.getCode())
@@ -75,6 +74,7 @@ public class SecurityGroup extends SyncBean {
                             .and("synced",Expression.eq,false)
                     , null);
             if(null!=removeLcs&&removeLcs.size()>0){
+                OSClient.OSClientV3 os = centerService.os(center);
                 for(LocalCenterRelation removeLc : removeLcs){
                     try{
                         if(removeLc.getCenterResourceId()!=null) {

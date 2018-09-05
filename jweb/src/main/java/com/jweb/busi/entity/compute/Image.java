@@ -47,8 +47,6 @@ public class Image extends SyncBean {
     private String status;
     @Field(name="元数据",type = "TEXT")
     private String metadataJson;
-    @Field(name = "内核")
-    private String kernel;
     Map<String,String> metadata;
 
     public String getId() {
@@ -146,7 +144,6 @@ public class Image extends SyncBean {
     protected void removeCenterResource(Center center, BeanService beanService, CenterService centerService)
             throws BusiException {
         try {
-            OSClient.OSClientV3 os = centerService.os(center);
             List<LocalCenterRelation> removeLcs = beanService.list(
                     LocalCenterRelation.class
                     , Where.create("centerCode",Expression.eq,center.getCode())
@@ -154,6 +151,7 @@ public class Image extends SyncBean {
                             .and("localResourceId",Expression.eq,null)
                     , null);
             if(null!=removeLcs&&removeLcs.size()>0){
+                OSClient.OSClientV3 os = centerService.os(center);
                 for(LocalCenterRelation removeLc : removeLcs){
                     try{
                         if(removeLc.getCenterResourceId()!=null) {
@@ -253,13 +251,5 @@ public class Image extends SyncBean {
 
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
-    }
-
-    public String getKernel() {
-        return kernel;
-    }
-
-    public void setKernel(String kernel) {
-        this.kernel = kernel;
     }
 }
