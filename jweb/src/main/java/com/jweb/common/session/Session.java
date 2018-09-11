@@ -20,6 +20,10 @@ public class Session {
         }
     };
 	private static UserHolder<LoginUser> userHolder = new MapUserHolder<>();
+
+	public static void setUserHolder(UserHolder<LoginUser> holder){
+		userHolder = holder;
+	}
 	
 	public static void setCurrentToken(String token) {
 		tokenThreadLocal.set(token);
