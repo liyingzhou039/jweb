@@ -311,6 +311,7 @@ var sys={
 			$("#window_"+this.windows[i]).hide();
 		}
 		$("#window_"+id).show();
+		$(window).resize();
 	}
 };
 

@@ -20,7 +20,7 @@ public class BeanServiceTest {
         List<String> keys = new ArrayList<>(Arrays.asList(
             "select","from","limit","order","by","asc","desc","join",
                 "on","in","left","right","inner","group","and","or",
-                "where","update","delete","into"
+                "where","update","delete","into","as","all","union"
         ));
         List<String> nokeyWords = new ArrayList<>();
         for(String word:words){

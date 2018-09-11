@@ -1,7 +1,5 @@
 package com.jweb.sys.rest.identity;
 
-
-import com.jweb.busi.entity.project.ProjectUser;
 import com.jweb.common.exception.BusiException;
 import com.jweb.common.persistent.model.Expression;
 import com.jweb.common.persistent.model.Where;
@@ -51,15 +49,6 @@ public class LoginRestController {
 			LoginUser loginUser = new LoginUser();
 			loginUser.setId(user.getId());
 			loginUser.setUsername(user.getUsername());
-			//获取项目信息
-			List<ProjectUser> projectUsers = beanService.list(ProjectUser.class,
-					Where.create("userId",Expression.eq,user.getId()),
-					null);
-			if(projectUsers==null || projectUsers.size()<=0){
-				throw new BusiException("该用户没有分配项目");
-			}else{
-				loginUser.setProjectId(projectUsers.get(0).getProjectId());
-			}
 			//获取角色信息
 			List<String> roleIds = new ArrayList<>();
 			List<UserRole> userRoles = beanService.list(UserRole.class,

@@ -20,9 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("")
 public class SysController{
-	@Value("${sys.company.name:云管平台}")
+	@Value("${sys.company.name:Jweb}")
 	private String companyName;
-	@Value("${sys.name:云管平台}")
+	@Value("${sys.name:Jweb}")
 	private String sysName;
 	@Value("${sys.isp.url:/login}")
 	private String ispUrl;

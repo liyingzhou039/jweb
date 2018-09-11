@@ -104,7 +104,7 @@ BUTTON:hover{
 			success: function(r){
 				if(r&&r.ok){
 					localStorage.setItem('_token',r.entity.token);
-					localStorage.setItem('username',r.entity.name);
+					localStorage.setItem('username',r.entity.username);
 					localStorage.setItem('userId',r.entity.id);
 					localStorage.setItem('projectId',r.entity.projectId);
 					localStorage.setItem('isAdmin',r.entity.admin);
