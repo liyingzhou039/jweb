@@ -41,6 +41,27 @@ public class BeanService {
     public AbstractLchDialect getDialect() {
         return d;
     }
+    private String parseOrderBy(String orderBy){
+        if(null==orderBy) return "";
+        String[] cols = orderBy.split(",");
+        StringBuffer orderBySql = new StringBuffer();
+        for(String col:cols){
+            if(col!=null&& !col.trim().equals("")){
+                col = col.trim();
+                String[] words = col.split("\\s+");
+                orderBySql.append(StringUtil.toSlide(words[0].trim()));
+                if(words.length>1){
+                    orderBySql.append(" ");
+                    orderBySql.append(words[1]);
+                }
+                orderBySql.append(",");
+            }
+        }
+        orderBy = orderBySql.toString();
+        if(orderBy.endsWith(","))
+            orderBy =orderBy.substring(0,orderBy.length()-1);
+        return orderBy.toLowerCase();
+    }
     public void createTables() {
         List<Table> tables = BeanPool.getBeanTables();
         for (Table table : tables) {
@@ -259,6 +280,9 @@ public class BeanService {
     }
 
     public <T> Pager<T> getPager(Class<T> beanClass, int pageNumber, int pageSize, Where where, String orderBy) throws BusiException {
+
+        orderBy = parseOrderBy(orderBy);
+
         Pager<T> pager = new Pager<T>();
         if(pageNumber<=1) pageNumber = 1;
         pager.setPageNumber(pageNumber);
@@ -339,6 +363,7 @@ public class BeanService {
         return this.list(beanClass,where,null);
     }
     public <T> List<T> list(Class<T> beanClass, Where where, String orderBy) throws BusiException {
+        orderBy = parseOrderBy(orderBy);
         List<T> ls = new ArrayList<>();
         PrepareSql preSql = d.listBeans(beanClass, where, orderBy);
         System.out.println(preSql);

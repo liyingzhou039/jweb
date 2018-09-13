@@ -35,7 +35,28 @@ public class BeanServiceTest {
     }
 
     @Test
-    public void query(){
+    public void orderBy(){
+        System.out.println("#"+parseOrderBy("  name Asc ,userName    desc  ")+"#");
     }
-
+    private String parseOrderBy(String orderBy){
+        if(null==orderBy) return "";
+        String[] cols = orderBy.split(",");
+        StringBuffer orderBySql = new StringBuffer();
+        for(String col:cols){
+            if(col!=null&& !col.trim().equals("")){
+                col = col.trim();
+                String[] words = col.split("\\s+");
+                orderBySql.append(StringUtil.toSlide(words[0].trim()));
+                if(words.length>1){
+                    orderBySql.append(" ");
+                    orderBySql.append(words[1]);
+                }
+                orderBySql.append(",");
+            }
+        }
+        orderBy = orderBySql.toString();
+        if(orderBy.endsWith(","))
+            orderBy =orderBy.substring(0,orderBy.length()-1);
+        return orderBy.toLowerCase();
+    }
 }
