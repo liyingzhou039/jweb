@@ -1,13 +1,11 @@
 package com.jweb.common.service;
 
-import com.jweb.common.dto.Execute;
 import com.jweb.common.exception.BusiException;
 import com.jweb.common.persistent.BeanPool;
 import com.jweb.common.persistent.dialect.AbstractLchDialect;
 import com.jweb.common.persistent.model.PrepareSql;
 import com.jweb.common.persistent.model.Table;
 import com.jweb.common.persistent.model.Where;
-import com.jweb.common.util.JsonUtil;
 import com.jweb.common.util.Pager;
 import com.jweb.common.util.RegexUtil;
 import com.jweb.common.util.StringUtil;
@@ -133,54 +131,6 @@ public class BeanService {
         return t;
     }
 
-    @Transactional
-    public void executeBatch(List<Execute> executes) throws BusiException {
-        Connection conn = null;
-        PreparedStatement st = null;
-        try {
-            conn = DataSourceUtils.doGetConnection(dataSource);
-            for (Execute execute : executes) {
-                String method = execute.getMethod();
-                Class<?> beanClass = execute.getBean().getClass();
-                Object bean = execute.getBean();
-                PrepareSql preSql = null;
-                if(Execute.REMOVE.equalsIgnoreCase(method)) {
-                    try {
-                        Method idGetter = bean.getClass().getDeclaredMethod("getId");
-                        String id = String.valueOf(idGetter.invoke(bean));
-                        preSql = d.removeBean(beanClass, id);
-                    }catch(Exception ee){}
-                }else if(Execute.CREATE.equalsIgnoreCase(method)) {
-                    try{
-                        Method idGetter = bean.getClass().getDeclaredMethod("getId");
-                        if(StringUtil.isNull((String)idGetter.invoke(bean))){
-                            Method idSetter = bean.getClass().getDeclaredMethod("setId", String.class);
-                            idSetter.invoke(bean, UUID.randomUUID().toString().replace("-", ""));
-                        }
-                        validatorService.check(bean);
-                        preSql = d.createBean(bean);
-                    }catch(Exception ee){}
-                }else if(Execute.UPDATE.equalsIgnoreCase(method)) {
-                    validatorService.check(bean);
-                    preSql = d.updateBean(bean);
-                }
-                st = conn.prepareStatement(preSql.getSql());
-                setParams(st, preSql.getParams());
-                st.executeUpdate();
-            }
-        } catch (Exception e) {
-            System.out.println("执行[" + JsonUtil.beanToJson(executes) + "]");
-            e.printStackTrace();
-            System.out.println("失败[" + e.getMessage() + "]");
-            throw new BusiException("[" + e.getMessage() + "]失败:"+e.getMessage());
-        } finally {
-            try {
-                st.close();
-                DataSourceUtils.releaseConnection(conn, dataSource);
-            } catch (Exception e) {
-            }
-        }
-    }
 
     public <T> void remove(Class<T> beanClass, String id) throws BusiException {
         PrepareSql preSql = d.removeBean(beanClass, id);
@@ -451,5 +401,57 @@ public class BeanService {
             }
         }
         return ls;
+    }
+    public void  update(String hql,Object... params) throws BusiException{
+        if(hql==null) throw new BusiException("HQL语句不能为空");
+        List<Class<?>> beanClasses = BeanPool.getBeans();
+        Map<String,String> beanNameTableNames = new HashMap<>();
+        if(beanClasses!=null){
+            for(Class beanClass:beanClasses){
+                beanNameTableNames.put(beanClass.getSimpleName(),BeanPool.getBeanTable(beanClass).getTableName());
+            }
+        }
+        for(String beanName:beanNameTableNames.keySet()){
+            hql = hql.replace(beanName,beanNameTableNames.get(beanName).toLowerCase());
+        }
+        List<String> words= RegexUtil.getRegText("([0-9a-zA-Z_]+)",hql);
+        //去掉关键字
+        List<String> keys = new ArrayList<>(Arrays.asList(
+                "select","from","limit","order","by","asc","desc","join",
+                "on","in","left","right","inner","group","and","or",
+                "where","update","delete","into"
+        ));
+        for(String word:words){
+            if(!keys.contains(word.toLowerCase())){
+                hql = hql.replace(word,StringUtil.toSlide(word));
+            }
+        }
+
+        PrepareSql preSql = new PrepareSql();
+        preSql.setSql(hql);
+        preSql.setParams(Arrays.asList(params));
+
+        System.out.println(preSql);
+        Connection conn = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            conn = DataSourceUtils.doGetConnection(dataSource);
+            st = conn.prepareStatement(preSql.getSql());
+            setParams(st, preSql.getParams());
+            st.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("执行");
+            System.out.println(preSql);
+            System.out.println("失败[" + e.getMessage() + "]");
+            throw new BusiException("执行失败");
+        } finally {
+            try {
+                rs.close();
+                st.close();
+                DataSourceUtils.releaseConnection(conn, dataSource);
+            } catch (Exception e) {
+            }
+        }
     }
 }

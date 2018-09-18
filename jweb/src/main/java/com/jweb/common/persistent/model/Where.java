@@ -145,6 +145,11 @@ public class Where {
 	}
 
 	public static Where parse(String exString){
+		if(exString!=null && exString.trim().startsWith("&&"))
+			exString = exString.trim().substring(2);
+		if(exString!=null && exString.trim().startsWith("||"))
+			exString = exString.trim().substring(2);
+
 		List<String> exs = new ArrayList<>();
 		int curIndex=0;
 		for(int i=0;i<exString.length()-1;i++){

@@ -1,6 +1,5 @@
 package com.jweb.sys.rest.identity;
 
-import com.jweb.common.dto.Execute;
 import com.jweb.common.persistent.model.Expression;
 import com.jweb.common.persistent.model.Where;
 import com.jweb.common.service.BeanService;
@@ -10,7 +9,6 @@ import com.jweb.sys.service.identity.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +54,9 @@ public class RoleRestController {
     ){
         Result<Object> r = new Result<Object>();
         try {
+            beanService.remove(RoleMenu.class,Where.create("roleId", Expression.eq, roleId));
+            beanService.remove(RoleElement.class,Where.create("roleId", Expression.eq, roleId));
             final String comma =  ",";
-            List<Execute> executes = new ArrayList<>();
             for(String menuId:menuIds.split(comma)) {
                 if(menuId==null||"".equals(menuId)) {
                     continue;
@@ -65,7 +64,7 @@ public class RoleRestController {
                 RoleMenu menu = new RoleMenu();
                 menu.setMenuId(menuId);
                 menu.setRoleId(roleId);
-                executes.add(new Execute(Execute.CREATE,menu));
+                beanService.create(menu);
             }
             final String commas =  ",";
             for(String elementId:elementIds.split(commas)) {
@@ -75,11 +74,8 @@ public class RoleRestController {
                 RoleElement element = new RoleElement();
                 element.setElementId(elementId);
                 element.setRoleId(roleId);
-                executes.add(new Execute(Execute.CREATE,element));
+                beanService.create(element);
             }
-            beanService.remove(RoleMenu.class,Where.create("roleId", Expression.eq, roleId));
-            beanService.remove(RoleElement.class,Where.create("roleId", Expression.eq, roleId));
-            beanService.executeBatch(executes);
             r.setOk(true);
         } catch (Exception e) {
             r.setOk(false);

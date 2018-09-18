@@ -1,6 +1,5 @@
 package com.jweb.sys.service.identity;
 
-import com.jweb.common.dto.Execute;
 import com.jweb.common.exception.BusiException;
 import com.jweb.common.persistent.model.Expression;
 import com.jweb.common.persistent.model.Where;
@@ -13,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class UserService {
     @Autowired
@@ -24,17 +20,14 @@ public class UserService {
     public User create(User user,String[] roleIds) throws BusiException{
         try{
             beanService.create(user);
-            List<Execute> executes = new ArrayList<>();
             for(String roleId : roleIds){
                 if(StringUtil.notNull(roleId)){
                     UserRole userRole= new UserRole();
                     userRole.setUserId(user.getId());
                     userRole.setRoleId(roleId);
-                    Execute execute = new Execute(Execute.CREATE,userRole);
-                    executes.add(execute);
+                    beanService.create(userRole);
                 }
             }
-            beanService.executeBatch(executes);
         }catch (Exception e){
             throw new BusiException(e.getMessage());
         }
@@ -56,17 +49,14 @@ public class UserService {
             beanService.update(user);
             beanService.remove(UserRole.class,
                     Where.create("userId", Expression.eq, user.getId()));
-            List<Execute> executes = new ArrayList<>();
             for(String roleId : roleIds){
                 if(StringUtil.notNull(roleId)){
                     UserRole userRole= new UserRole();
                     userRole.setUserId(user.getId());
                     userRole.setRoleId(roleId);
-                    Execute execute = new Execute(Execute.CREATE,userRole);
-                    executes.add(execute);
+                    beanService.create(userRole);
                 }
             }
-            beanService.executeBatch(executes);
         }catch (Exception e){
             throw new BusiException(e.getMessage());
         }
