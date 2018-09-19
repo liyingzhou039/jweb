@@ -357,9 +357,6 @@ public class BeanService {
                 beanNameTableNames.put(beanClass.getSimpleName(),BeanPool.getBeanTable(beanClass).getTableName());
             }
         }
-        for(String beanName:beanNameTableNames.keySet()){
-            hql = hql.replace(beanName,beanNameTableNames.get(beanName).toLowerCase());
-        }
         List<String> words= RegexUtil.getRegText("([0-9a-zA-Z_]+)",hql);
         //去掉关键字
         List<String> keys = new ArrayList<>(Arrays.asList(
@@ -368,7 +365,9 @@ public class BeanService {
                 "where","update","delete","into"
         ));
         for(String word:words){
-            if(!keys.contains(word.toLowerCase())){
+            if(beanNameTableNames.containsKey(word)){
+                hql = hql.replace(word,beanNameTableNames.get(word).toLowerCase());
+            }else if(!keys.contains(word.toLowerCase())){
                 hql = hql.replace(word,StringUtil.toSlide(word));
             }
         }
@@ -402,7 +401,7 @@ public class BeanService {
         }
         return ls;
     }
-    public void  update(String hql,Object... params) throws BusiException{
+    public void  execute(String hql,Object... params) throws BusiException{
         if(hql==null) throw new BusiException("HQL语句不能为空");
         List<Class<?>> beanClasses = BeanPool.getBeans();
         Map<String,String> beanNameTableNames = new HashMap<>();
@@ -410,9 +409,6 @@ public class BeanService {
             for(Class beanClass:beanClasses){
                 beanNameTableNames.put(beanClass.getSimpleName(),BeanPool.getBeanTable(beanClass).getTableName());
             }
-        }
-        for(String beanName:beanNameTableNames.keySet()){
-            hql = hql.replace(beanName,beanNameTableNames.get(beanName).toLowerCase());
         }
         List<String> words= RegexUtil.getRegText("([0-9a-zA-Z_]+)",hql);
         //去掉关键字
@@ -422,7 +418,9 @@ public class BeanService {
                 "where","update","delete","into"
         ));
         for(String word:words){
-            if(!keys.contains(word.toLowerCase())){
+            if(beanNameTableNames.containsKey(word)){
+                hql = hql.replace(word,beanNameTableNames.get(word).toLowerCase());
+            }else if(!keys.contains(word.toLowerCase())){
                 hql = hql.replace(word,StringUtil.toSlide(word));
             }
         }
